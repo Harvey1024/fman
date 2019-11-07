@@ -60,7 +60,7 @@ header{
     border: 1px groove #000;
 }
 .name{width: 50%;}
-.name:hover{
+.name:hover,.tableheader:hover{
     background-color: gray;
 }
 .size{width: 25%;}
