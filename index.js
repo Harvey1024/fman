@@ -1,26 +1,25 @@
 var fs=require("fs")
 
 var dirnow;
+var dirback;
 // initial filelist after html loaded
 window.onload=function(){
-    dirnow="C:/Users/cquda/OneDrive/"
+    dirnow="C:/users/"    
     showList(dirnow);
 }
-var sig=0;
-var EventEmitter = require('events').EventEmitter; 
-var event = new EventEmitter(); 
 
-// event.on('some_event', function() { 
-//     console.log('some_event 事件触发'); 
-//     fileclickfun();
-// }); 
-
-// setTimeout(function() { 
-//     event.emit('some_event'); 
-// }, 1500); 
-
-
-
+document.onkeydown = function (event) {
+    var e = event || window.event || arguments.callee.caller.arguments[0];
+    if (e && e.keyCode == 8) { 
+        // delete last folder
+        dirnow=document.getElementById("leftdir").innerHTML;
+        var dirbackarr=dirnow.split("/")
+        dirbackarr.splice(-2,1)
+        dirback=dirbackarr.join('/');
+        console.log("back is "+dirback);
+        showList(dirback);  
+    }
+}
 // file click function
 function fileclickfun(){
     var filebtns=document.getElementsByClassName("name");
@@ -30,9 +29,8 @@ function fileclickfun(){
             var btn=document.getElementById("leftfile"+i.toString());
             if(btn.classList[1]=="folder"){
                 console.log("this is dir="+dirnow);
-                showList(dirnow+btn.innerText+"/");
-                
-                // fileclickfun();
+                dirnow=document.getElementById("leftdir").innerHTML;
+                showList(dirnow+btn.innerText+"/");                
             }
             else{
                 console.log("this is file "+btn.id);
@@ -57,6 +55,7 @@ function showList(directory){
 
         // fileclickfun() should be in call back function
         fileclickfun();
+        dirback=dirnow;
         dirnow=document.getElementById("leftdir").innerHTML;
     });    
     console.log("finished show list");
@@ -68,7 +67,7 @@ function nameToHtmlTable(directory,files){
     var tableString="";
     for(let i=0; i<files.length;i++){
         var fileid="leftfile"+i.toString();
-        tableString=tableString+"<tr>"+"<td class='name',"+" id='"+ fileid+ "',name="+directory+">"+files[i]+"</td></tr>"
+        tableString=tableString+"<tr>"+"<td class='name',"+" id="+ fileid+ ">"+files[i]+"</td></tr>"
         document.getElementById("leftdir").innerHTML=directory;
     }
     return tableString;
