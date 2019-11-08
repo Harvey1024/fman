@@ -22,7 +22,7 @@ section{
     bottom: 31px;
     width: 50%;
     background-color: #272822;
-    overflow: auto;
+    overflow: auto;    
 }
 .left section{
     left: 0;
@@ -44,7 +44,7 @@ header{
     right: -5px;
     width: 50%;
 }
-.dir{
+.leftdir{
     padding: 0 5px;
     color: white;
 }
@@ -59,12 +59,15 @@ header{
 .tableBorderUp{
     border: 1px groove #000;
 }
-.name{width: 50%;}
+.name,.nameheader{width: 65%;}
 .name:hover,.tableheader:hover{
     background-color: gray;
 }
-.size{width: 25%;}
-.date{width: 25%;}
+.size,.sizeheader{width: 10%;}
+.date,.dateheader{width: 25%;}
+td{
+    font-size: 20px;
+}
 footer{
     background-color: #585858;
     position: fixed;
