@@ -25,7 +25,7 @@ function fileclickfun(){
     var filebtns=document.getElementsByClassName("name");
     for(let i=0; i<filebtns.length;i++){
       
-        filebtns[i].addEventListener('click', function(){
+        filebtns[i].addEventListener('dblclick', function(){
             var btn=document.getElementById("leftfile"+i.toString());
             if(btn.classList[1]=="folder"){
                 console.log("this is dir="+dirnow);
@@ -55,8 +55,6 @@ function showList(directory){
 
         // fileclickfun() should be in call back function
         fileclickfun();
-        dirback=dirnow;
-        dirnow=document.getElementById("leftdir").innerHTML;
     });    
     console.log("finished show list");
     
@@ -65,30 +63,34 @@ function showList(directory){
 // transform array to html table
 function nameToHtmlTable(directory,files){
     var tableString="";
-    for(let i=0; i<files.length;i++){
-        var fileid="leftfile"+i.toString();
-        tableString=tableString+"<tr>"+"<td class='name',"+" id="+ fileid+ ">"+files[i]+"</td></tr>"
-        document.getElementById("leftdir").innerHTML=directory;
+    console.log(files)
+    for(var i=0, k=0; i<files.length;i++){
+        if(files[i][0]!="." && files[i][0]!="$"){
+            console.log(files[i].toString())
+            var fileid="leftfile"+k.toString();
+            k++;
+            tableString=tableString+"<tr>"+"<td class='name',"+" id="+ fileid+">"+files[i]+"</td></tr>";
+                       
+        }
     }
-    return tableString;
+    document.getElementById("leftdir").innerHTML=directory; 
+    return tableString
 }
 function sizeToHtml(directory,files){
     var names=document.getElementsByClassName("name");
     
-    for(let i=0; i<files.length; i++){
-        var filedir=directory+files[i];        
-        fs.stat(filedir, function (err, stats) {
-            if(stats.isFile()){
-                var filedate=dateFormat(stats["atime"].toString().slice(4,21));
-                var filesize=fileSizeFormat(stats["size"]);
-                names[i].insertAdjacentHTML('afterend',"<td class='size'>"+filesize+"B</td><td class='date'>"+filedate+"</td>");
-                // console.log(stats["size"]);
-            }
-            if(stats.isDirectory()){
-                names[i].classList.add("folder");
-            }
-         });
-        
+    for(let i=0; i<names.length; i++){
+            var filedir=directory+names[i].innerText;        
+            fs.stat(filedir, function (err, stats) {
+                if(stats.isFile()){
+                    var filedate=dateFormat(stats["atime"].toString().slice(4,21));
+                    var filesize=fileSizeFormat(stats["size"]);
+                    names[i].insertAdjacentHTML('afterend',"<td class='size'>"+filesize+"B</td><td class='date'>"+filedate+"</td>");
+                }
+                if(stats.isDirectory()){
+                    names[i].classList.add("folder");
+                }
+            });        
     }
 }
 function filesize(directory,filename){
