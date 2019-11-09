@@ -64,12 +64,12 @@ header{
 .tableBorderUp{
     border: 1px groove #000;
 }
-.name,.nameheader{width: 65%;}
-.name:hover,.tableheader:hover{
+.nameL,.nameR,.nameheader{width: 65%; overflow: hidden;}
+.nameL:hover,.nameR:hover,.tableheader:hover{
     background-color: #49483e;
 }
-.size,.sizeheader{width: 10%;}
-.date,.dateheader{width: 25%;}
+.size,.sizeheader{width: 10%;overflow: hidden;}
+.date,.dateheader{width: 25%;overflow: hidden;}
 td{
     font-size: 20px;
 }

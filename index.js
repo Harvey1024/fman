@@ -2,137 +2,155 @@ var fs=require("fs")
 var sys=require("sys")
 var exec = require('child_process').exec;
 
-var dirnowL;
-var dirnowR;
-var activePan="left";
-var cursorPositionL=0;
-var cursorPositionR=0;
+var dirnow=["",""];
+var cursorPosition=[0,0];
+var key=1; //0:left pan, 1:right pan; initialize right fistly
 // initial filelist after html loaded
 window.onload=function(){
-    dirnowL="C:/Users/cquda/OneDrive/Web/fman/test/";
-    dirnowR="C:/"
-    showList(dirnowL);
-    // showList(dirnowR,"right");
+    var dirnowL="C:/Users/cquda/OneDrive/Web/fman/test/";
+    var dirnowR="C:/Users/";
+    dirnow=[dirnowL,dirnowR];
+    showList(dirnow[key]);
 }
+
+var EventEmitter = require('events').EventEmitter; 
+var event = new EventEmitter(); 
+event.on('some_event', function() { 
+    
+    key=0; //init left pan
+    console.log('some_event 事件触发k=%d',key); 
+    showList(dirnow[key]);
+}); 
+
+setTimeout(function() { 
+    event.emit('some_event'); 
+}, 80); 
 
 document.onkeydown = function (event) {
     var e = event || window.event || arguments.callee.caller.arguments[0];
     // when key "BackSpace" pressed
     if (e && e.keyCode == 8) { 
         // delete last folder
-        dirnowL=document.getElementById("leftdir").innerHTML;
-        var dirbackarr=dirnowL.split("/")
+        refreshDirnow();
+        var dirbackarr=dirnow[key].split("/")
         dirbackarr.splice(-2,1)
         var dirback=dirbackarr.join('/');
         console.log("back is "+dirback);
         showList(dirback);  
         resetCursor();
     }
-    // when key "up arrow" pressed
-    var filebtns=document.getElementsByClassName("name");
-    if (e && e.keyCode == 38) {
-        if(cursorPositionL==0)
-            cursorPositionL=filebtns.length-1;
-        else
-            cursorPositionL=cursorPositionL-1;
-        filebtns[cursorPositionL].click();
-    }
-    // when key "down arrow" pressed
-    if (e && e.keyCode == 40) {
-        if(cursorPositionL==filebtns.length-1)
-            cursorPositionL=0;
-        else
-            cursorPositionL=cursorPositionL+1;
-        filebtns[cursorPositionL].click();
-    }
-    // when "enter" pressed
-    if (e && e.keyCode == 13) {
-        //should be optimize with dblckick function
-        var filebtns=document.getElementsByClassName("name");
-        if(filebtns[cursorPositionL].classList[1]=="folder"){
-            // if folder, open folder and show file list in folder
-            console.log("this is dir="+dirnowL);
-            dirnowL=document.getElementById("leftdir").innerHTML;
-            showList(dirnowL+filebtns[cursorPositionL].innerText+"/"); 
-            resetCursor();               
-        } 
-        else{
-            dirnowL=document.getElementById("leftdir").innerHTML;
-            // if file, open file by default program of system
-            exec("start"+" "+dirnowL+"/"+filebtns[cursorPositionL].innerText);
-            console.log("this is file "+filebtns[cursorPositionL].id);
-        }
-    }
-    // when key "tap" pressed
+//     // when key "up arrow" pressed
+//     if (e && e.keyCode == 38) {
+//         if(cursorPosition[cursorkey]==0)
+//             cursorPosition[cursorkey]=filebtns.length-1;
+//         else
+//             cursorPosition[cursorkey]-=1;
+//         filebtns[cursorPosition[cursorkey]].click();
+//     }
+//     // when key "down arrow" pressed
+//     if (e && e.keyCode == 40) {
+//         if(cursorPosition[cursorkey]==filebtns.length-1)
+//             cursorPosition[cursorkey]=0;
+//         else
+//             cursorPosition[cursorkey]+=1;
+//         filebtns[cursorPosition[cursorkey]].click();
+//     }
+//     // when "enter" pressed
+//     if (e && e.keyCode == 13) {
+//         //should be optimize with dblckick function
+//         if(filebtns[cursorPosition[cursorkey]].classList[1]=="folder"){
+//             // if folder, open folder and show file list in folder
+//             console.log("this is dir="+dirnowL);
+//             dirnowL=document.getElementById("leftdir").innerHTML;
+//             showList(dirnowL+filebtns[cursorPosition[cursorkey]].innerText+"/"); 
+//             resetCursor();               
+//         } 
+//         else{
+//             dirnowL=document.getElementById("leftdir").innerHTML;
+//             // if file, open file by default program of system
+//             exec("start"+" "+dirnowL+"/"+filebtns[cursorPosition[cursorkey]].innerText);
+//             console.log("this is file "+filebtns[cursorPosition[cursorkey]].id);
+//         }
+//     }
+//     // when key "tap" pressed
 }
 
-// show the background of current cursor position 
-function cursorBG(cursorPosition,activePan,bg){
-    let fileid;
-    if(activePan=="left")
-        fileid="Lfile";
-    else
-        fileid="Rfile";
-    var filerow=document.getElementById(fileid+cursorPosition.toString());
-    filerow.parentNode.style.backgroundColor=bg;
 
-}
 // file click function , chang cursor position and change backgroundColor
-function fileclickfun(){
-    var filebtns=document.getElementsByClassName("name");
-    
+function clickfun(){
+    // var filebtns=getfilebtns();
+    if(!key){
+        var filebtns=document.getElementsByClassName("nameL");
+        console.log("left")
+    }
+    else{
+        var filebtns=document.getElementsByClassName("nameR");
+        console.log("right")
+    }
     for(let i=0; i<filebtns.length;i++){
-        
+        let mykey=key;
         filebtns[i].addEventListener('click', function(){
-            if(filebtns[i].id.slice(0,5)=="Lfile"){
-                activePan="left";
-                cursorPositionL=i;
-            }
-            else{
-                activePan="right";
-                cursorPositionR=i;
-            }
-            clearBG();
-            cursorBG(i,activePan,"#49483e");
+            cursorPosition[mykey]=i;
+            key=mykey;
+            console.log("i = "+i.toString()+" key = "+key.toString())
+            clearBothBG();
+            cursorBG(i,key,"#49483e");
         })
     }
 }
-function clearBG(){
-    var filebtns=document.getElementsByClassName("name");
-    for(var j=0; j<filebtns.length;j++){
-        cursorBG(j,activePan,"#272822")
-    }
+function clearBothBG(){
+    clearoneBG(0);
+    clearoneBG(1);
+
+}
+
+function clearoneBG(mykey){
+    if(!mykey)
+        var classname= "nameL";
+    else
+        var classname = "nameR";
+    var filebtns=document.getElementsByClassName(classname);
+    for(let j=0; j<filebtns.length;j++){
+        cursorBG(j,mykey,"#272822")
+    }    
+}
+// show the background of current cursor position 
+function cursorBG(pos,pan,bg){
+    let fileid;
+    if(pan==0)
+        fileid="Lfile";
+    else
+        fileid="Rfile";
+    var filerow=document.getElementById(fileid+pos.toString());
+    filerow.parentNode.style.backgroundColor=bg;
 }
 function resetCursor(){
-    if(activePan=="left"){
-        cursorPositionL=0;
-        cursorBG(cursorPositionL,activePan,"#49483e");
-    }
-    else{
-        cursorPositionR=0;
-        cursorBG(cursorPositionR,activePan,"#49483e");
-    }
+    cursorPosition[key]=0;
+    cursorBG(0,key,"#49483e");
 }
 // file double click function
 function filedblclickfun(){
-    var filebtns=document.getElementsByClassName("name");
+    filebtns=getfilebtns();
+    if(!key){
+        var fileid = "Lfile";
+    }
+    else{
+        var fileid= "Rfile";
+    }
     for(let i=0; i<filebtns.length;i++){
-      
+        let mykey=key;
         filebtns[i].addEventListener('dblclick', function(){
-            var btn=document.getElementById("Lfile"+i.toString());
-            
+            key=mykey;
+            refreshDirnow();
+            var btn=document.getElementById(fileid+i.toString());
             if(btn.classList[1]=="folder"){
                 // if folder, open folder and show file list in folder
-                console.log("this is dir="+dirnowL);
-                
-                dirnowL=document.getElementById("leftdir").innerHTML;
-                showList(dirnowL+btn.innerText+"/");
+                showList(dirnow[key]+btn.innerText+"/");
                 resetCursor();                
             } 
             else{
-                dirnowL=document.getElementById("leftdir").innerHTML;
                 // if file, open file by default program of system
-                exec("start"+" "+dirnowL+"/"+btn.innerText);
+                exec("start"+" "+dirnow[key]+"/"+btn.innerText);
                 console.log("this is file "+btn.id);
             }
         });
@@ -140,49 +158,116 @@ function filedblclickfun(){
     console.log("click setted");
 }
 
+function refreshDirnow(){
+    let dirnowL=document.getElementById("leftdir").innerText;
+    let dirnowR=document.getElementById("rightdir").innerText;
+    dirnow=[dirnowL,dirnowR];
+}
+function getClassNameElement(){
+    if(!key){
+        var filebtns=document.getElementsByClassName("nameL");
+        var dirid="leftdir";
+        dirnowL=document.getElementById(dirid).innerHTML;
+        // var dirnow=dirnowL;
+        var fileid="Lfile"
+        cursorkey=0;
+    }
+    else{
+        var filebtns=document.getElementsByClassName("nameR");
+        var dirid="rightdir";
+        dirnowR=document.getElementById(dirid).innerHTML;
+        // var dirnow=dirnowR;
+        var fileid="Rfile"
+        cursorkey=1;
+    }
+    ckey=cursorkey;
+    // return [filebtns,dirid,dirnow,fileid,ckey];
+}
+function getfilebtns(){
+    if(!key){
+        var filebtns=document.getElementsByClassName("nameL");
+    }
+    else{
+        var filebtns=document.getElementsByClassName("nameR");
+    }
+    return filebtns;
+}
 
 // input dir show filelist on windows
 function showList(directory){
-    dirnowL=directory;
+    //read dircectory
     fs.readdir(directory,function(err, files){
         if (err) {
             return console.error(err);
         }
         //show filelist in html
         var fileListTable=document.getElementsByClassName("inflist");
-        var tabelLeft=fileListTable[1];
-        tabelLeft.innerHTML=nameToHtmlTable(directory,files);
-        sizeToHtml(directory,files);
-
-        // filedblclickfun() should be in call back function
-        filedblclickfun();
-        cursorBG(cursorPositionL,activePan,"#49483e");
-        fileclickfun();        
+        if(!key){
+            var listTable=fileListTable[1]; //left
+        }
+        else{
+            var listTable=fileListTable[3]; //right
+        }
+        // show file and folder in html
+        filetoHtml(listTable,files);
+        sizeAndDateToHtml(directory);
+        showdirheader(directory);
+        filedblclickfun(); //link ondblclick filedblclickfun() should be in call back function
+        clickfun();
+        // cursorBG(cursorPosition[key],"#49483e"); //init background
     });    
     console.log("finished show list");
-    
-    
 }
-
-// transform array to html table
-function nameToHtmlTable(directory,files){
-    var tableString="";
-    console.log(files)
+//show dir header
+function showdirheader(directory){
+    if(!key){
+        var dirheaderid="leftdir";
+    }
+    else{
+        var dirheaderid="rightdir";
+    }
+    document.getElementById(dirheaderid).innerHTML=directory; 
+}
+// transform array to html table, return html string
+function filetoHtml(listTable,files){
+    var filestring="";
+    var namestring = "";
+    var sizesting = "";
+    var datestring = "";
+    if(!key){
+        var filenameclass="nameL"
+        var filenameidtep="Lfile"
+    }
+    else{
+        var filenameclass="nameR"
+        var filenameidtep="Rfile"
+    }
     for(var i=0, k=0; i<files.length;i++){
-        if(files[i][0]!="." && files[i][0]!="$"){
-            console.log(files[i].toString())
-            var fileid="Lfile"+k.toString();
+        if(files[i][0]!="." && files[i][0]!="$"){   //hide hiden files
+            var fileid=filenameidtep+k.toString();
             k++;
-            tableString=tableString+"<tr>"+"<td class='name',"+" id="+ fileid+">"+files[i]+"</td></tr>";
-                       
+            namestring = "<td class='"+filenameclass+"'"+"id="+ fileid+">"+files[i]+"</td>";
+            filestring += "<tr>"+namestring +"</tr>"
         }
     }
-    document.getElementById("leftdir").innerHTML=directory; 
-    return tableString
+    listTable.innerHTML=filestring;
 }
-function sizeToHtml(directory,files){
-    var names=document.getElementsByClassName("name");
-    
+function insertSting(str,initposition, insertstr){
+    //insert insertstr into str from initposition
+    var strtmpl=str.slice(0,initposition);
+    var strtmpr=str.slice(initposition,str.length);
+    return strtmpl+insertstr+strtmpr;
+
+}
+
+//add size and date of file to html
+function sizeAndDateToHtml(directory){
+    if(!key){
+        var names=document.getElementsByClassName("nameL");
+    }
+    else{
+        var names=document.getElementsByClassName("nameR");
+    }
     for(let i=0; i<names.length; i++){
             var filedir=directory+names[i].innerText;        
             fs.stat(filedir, function (err, stats) {
