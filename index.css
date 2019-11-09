@@ -44,11 +44,16 @@ header{
     right: -5px;
     width: 50%;
 }
-.leftdir{
+#leftdir,#rightdir{
+    height: 31px;
+    line-height: 31px;
     padding: 0 5px;
     color: white;
+    font-size: 20px;
 }
 .inflist{
+    height: 31px;
+    line-height: 31px;
     width: 100%;
     color: white;
 }
@@ -61,7 +66,7 @@ header{
 }
 .name,.nameheader{width: 65%;}
 .name:hover,.tableheader:hover{
-    background-color: gray;
+    background-color: #49483e;
 }
 .size,.sizeheader{width: 10%;}
 .date,.dateheader{width: 25%;}
