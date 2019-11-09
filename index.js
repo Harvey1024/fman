@@ -1,10 +1,12 @@
 var fs=require("fs")
+var sys=require("sys")
+var exec = require('child_process').exec;
 
 var dirnow;
 var dirback;
 // initial filelist after html loaded
 window.onload=function(){
-    dirnow="C:/users/"    
+    dirnow="C:/Users/cquda/OneDrive/Web/fman/test/"    
     showList(dirnow);
 }
 
@@ -27,12 +29,17 @@ function fileclickfun(){
       
         filebtns[i].addEventListener('dblclick', function(){
             var btn=document.getElementById("leftfile"+i.toString());
+            
             if(btn.classList[1]=="folder"){
+                // if folder, open folder and show file list in folder
                 console.log("this is dir="+dirnow);
                 dirnow=document.getElementById("leftdir").innerHTML;
                 showList(dirnow+btn.innerText+"/");                
-            }
+            } 
             else{
+                dirnow=document.getElementById("leftdir").innerHTML;
+                // if file, open file by default program of system
+                exec("start"+" "+dirnow+"/"+btn.innerText);
                 console.log("this is file "+btn.id);
             }
         })
