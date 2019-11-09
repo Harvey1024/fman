@@ -19,6 +19,7 @@ event.on('some_event', function() {
     
     key=0; //init left pan
     console.log('some_event 事件触发k=%d',key); 
+    
     showList(dirnow[key]);
 }); 
 
@@ -37,42 +38,52 @@ document.onkeydown = function (event) {
         var dirback=dirbackarr.join('/');
         console.log("back is "+dirback);
         showList(dirback);  
-        resetCursor();
     }
-//     // when key "up arrow" pressed
-//     if (e && e.keyCode == 38) {
-//         if(cursorPosition[cursorkey]==0)
-//             cursorPosition[cursorkey]=filebtns.length-1;
-//         else
-//             cursorPosition[cursorkey]-=1;
-//         filebtns[cursorPosition[cursorkey]].click();
-//     }
-//     // when key "down arrow" pressed
-//     if (e && e.keyCode == 40) {
-//         if(cursorPosition[cursorkey]==filebtns.length-1)
-//             cursorPosition[cursorkey]=0;
-//         else
-//             cursorPosition[cursorkey]+=1;
-//         filebtns[cursorPosition[cursorkey]].click();
-//     }
-//     // when "enter" pressed
-//     if (e && e.keyCode == 13) {
-//         //should be optimize with dblckick function
-//         if(filebtns[cursorPosition[cursorkey]].classList[1]=="folder"){
-//             // if folder, open folder and show file list in folder
-//             console.log("this is dir="+dirnowL);
-//             dirnowL=document.getElementById("leftdir").innerHTML;
-//             showList(dirnowL+filebtns[cursorPosition[cursorkey]].innerText+"/"); 
-//             resetCursor();               
-//         } 
-//         else{
-//             dirnowL=document.getElementById("leftdir").innerHTML;
-//             // if file, open file by default program of system
-//             exec("start"+" "+dirnowL+"/"+filebtns[cursorPosition[cursorkey]].innerText);
-//             console.log("this is file "+filebtns[cursorPosition[cursorkey]].id);
-//         }
-//     }
-//     // when key "tap" pressed
+    // when key "up arrow" pressed
+    if (e && e.keyCode == 38) {
+        let filebtns=getfilebtns();
+        if(cursorPosition[key]==0)
+            cursorPosition[key]=filebtns.length-1;
+        else
+            cursorPosition[key]-=1;
+        filebtns[cursorPosition[key]].click();
+    }
+    // when key "down arrow" pressed
+    if (e && e.keyCode == 40) {
+        let filebtns=getfilebtns();
+        if(cursorPosition[key]==filebtns.length-1)
+            cursorPosition[key]=0;
+        else
+            cursorPosition[key]+=1;
+        filebtns[cursorPosition[key]].click();
+    }
+    // when "enter" pressed
+    if (e && e.keyCode == 13) {
+        //should be optimize with dblckick function
+        let filebtns=getfilebtns();
+
+        if(filebtns[cursorPosition[key]].classList[1]=="folder"){
+            // if folder, open folder and show file list in folder
+            console.log("this is dir="+dirnow[key]);
+            refreshDirnow();
+            showList(dirnow[key]+filebtns[cursorPosition[key]].innerText+"/"); 
+        } 
+        else{
+            dirnowL=document.getElementById("leftdir").innerHTML;
+            // if file, open file by default program of system
+            exec("start"+" "+dirnow[key]+"/"+filebtns[cursorPosition[key]].innerText);
+            console.log("this is file "+filebtns[cursorPosition[key]].id);
+        }
+    }
+    // when key "tap" pressed
+    if (e && e.keyCode == 9) {
+        if(!key)
+            key=1;
+        else
+            key=0;
+        clearBothBG();
+        cursorBG(cursorPosition[key],key,"#49483e");
+    }
 }
 
 
@@ -214,6 +225,9 @@ function showList(directory){
         showdirheader(directory);
         filedblclickfun(); //link ondblclick filedblclickfun() should be in call back function
         clickfun();
+        clearBothBG();
+        resetCursor();
+        refreshDirnow();
         // cursorBG(cursorPosition[key],"#49483e"); //init background
     });    
     console.log("finished show list");
