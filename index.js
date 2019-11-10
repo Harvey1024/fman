@@ -7,8 +7,8 @@ var cursorPosition=[0,0];
 var key=1; //0:left pan, 1:right pan; initialize right fistly
 // initial filelist after html loaded
 window.onload=function(){
-    var dirnowL="C:/Users/cquda/OneDrive/Web/fman/test/";
-    var dirnowR="C:/Users/";
+    var dirnowL="C:/Users/cquda/";
+    var dirnowR="C:/Users/cquda/";
     dirnow=[dirnowL,dirnowR];
     showList(dirnow[key]);
 }
@@ -40,25 +40,29 @@ document.onkeydown = function (event) {
         showList(dirback);  
     }
     // when key "up arrow" pressed
-    if (e && e.keyCode == 38) {
+    else if (e && e.keyCode == 38) {
+        e.preventDefault(); //prevent previeous scroll event
         let filebtns=getfilebtns();
         if(cursorPosition[key]==0)
-            cursorPosition[key]=filebtns.length-1;
+            cursorPosition[key]=0;
         else
             cursorPosition[key]-=1;
         filebtns[cursorPosition[key]].click();
+        filebtns[cursorPosition[key]].scrollIntoViewIfNeeded();
     }
     // when key "down arrow" pressed
-    if (e && e.keyCode == 40) {
+    else if (e && e.keyCode == 40) {
+        e.preventDefault();
         let filebtns=getfilebtns();
         if(cursorPosition[key]==filebtns.length-1)
-            cursorPosition[key]=0;
+            cursorPosition[key]=filebtns.length-1;
         else
             cursorPosition[key]+=1;
         filebtns[cursorPosition[key]].click();
+        filebtns[cursorPosition[key]].scrollIntoViewIfNeeded();
     }
     // when "enter" pressed
-    if (e && e.keyCode == 13) {
+    else if (e && e.keyCode == 13) {
         //should be optimize with dblckick function
         let filebtns=getfilebtns();
 
@@ -76,16 +80,29 @@ document.onkeydown = function (event) {
         }
     }
     // when key "tap" pressed
-    if (e && e.keyCode == 9) {
-        if(!key)
+    else if (e && e.keyCode == 9) {
+        if(!key){
             key=1;
-        else
+            
+        }
+        else{
             key=0;
+        }
+        document.getElementsByTagName("section")[key].click()
+        fileinview();
         clearBothBG();
         cursorBG(cursorPosition[key],key,"#49483e");
     }
+    else{
+        // if 
+    }
 }
 
+function fileinview(){
+    let filebtns=getfilebtns();
+    filebtns[cursorPosition[key]].scrollIntoViewIfNeeded();
+    // window.location.hash=filebtns[cursorPosition[key]].id;  //show the file selected in view.
+}
 
 // file click function , chang cursor position and change backgroundColor
 function clickfun(){
@@ -274,6 +291,7 @@ function insertSting(str,initposition, insertstr){
 
 }
 
+
 //add size and date of file to html
 function sizeAndDateToHtml(directory){
     if(!key){
@@ -287,12 +305,15 @@ function sizeAndDateToHtml(directory){
             fs.stat(filedir, function (err, stats) {
                 if(stats.isFile()){
                     var filedate=dateFormat(stats["atime"].toString().slice(4,21));
-                    var filesize=fileSizeFormat(stats["size"]);
-                    names[i].insertAdjacentHTML('afterend',"<td class='size'>"+filesize+"B</td><td class='date'>"+filedate+"</td>");
+                    var filesize=fileSizeFormat(stats["size"])+"B";
                 }
-                if(stats.isDirectory()){
+                else if(stats.isDirectory()){
+                    var filedate="";
+                    var filesize="";
                     names[i].classList.add("folder");
                 }
+                names[i].insertAdjacentHTML('afterend',
+                    "<td class='size'>"+filesize+"</td><td class='date'>"+filedate+"</td>");
             });        
     }
 }

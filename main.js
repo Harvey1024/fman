@@ -23,7 +23,7 @@ app.on('ready', function() {
   // 创建浏览器窗口。
   mainWindow = new BrowserWindow({
     width: 1600, 
-    height: 1200,
+    height: 1000,
     webPreferences:{
       nodeIntegration: true
     }
