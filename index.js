@@ -13,6 +13,10 @@ window.onload=function(){
     showList(dirnow[key]);
 }
 
+//window resize
+window.onresize=function(){
+    
+}
 var EventEmitter = require('events').EventEmitter; 
 var event = new EventEmitter(); 
 event.on('some_event', function() { 
