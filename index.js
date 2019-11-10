@@ -112,6 +112,12 @@ document.onkeydown = function (event) {
         clearBothBG();
         cursorBG(cursorPosition[key],key,"#49483e");
     }
+    //esc
+    else if(e && e.keyCode == 27){
+        filterStr[key]="";
+        var quickNavEle=document.getElementsByClassName("quicknav");
+        quickNavEle[key].classList.add("hide");
+    }
     else{
         var quickNavEle=document.getElementsByClassName("quicknav");
         if (e && e.keyCode == 8){
