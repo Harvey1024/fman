@@ -5,35 +5,31 @@
     font-size: 24px;
     box-sizing: border-box;
 }
-ul{
-    list-style: none;
-}
-.bd{
-    border:1px solid red;
-}
-body{
+ul{list-style: none;}
+.bd{border:1px solid red;}
+/* body{
     background-color: gray;
     overflow: hidden;
-}
+} */
 main{
     display: flex;
     position: relative;
     width: 100%;
-    height: 1000px;
+    height: 800px;
     flex-direction: row;
-    overflow: hidden;
+    color: white;
+    /* overflow: hidden; */
 }
 .left, .right{
-    position: relative;
-    display: block;
+    position: relative; /*for quicksearch box*/
+    display: flex;
+    flex-direction: column;
     width: 50%;
-    height: 100%;
+    /* height: 100%; */
     background-color: #272822;
-    z-index: 2;
-    box-sizing: border-box;
+    /* z-index: 2; */
 }
 .left{
-    /* left: -2px; */
     border-right: 2px solid gray;
 }
 .right{
@@ -41,37 +37,38 @@ main{
     border-left: 2px solid gray;
 }
 section{
-    position: fixed;
+    /* position: fixed; */
+
     top: 62px;
     /* bottom: 31px; */
-    height: 868px;
-    width: 50%;
+    height: 707px;  /* 1000-31*3 */
+    /* width: 50%; */
     overflow-y: auto;   
     overflow-x: hidden; 
-    z-index: 1;
+    /* z-index: 1; */
     
 }
-section:first-child{
+/* section:first-child{
     left: 0px;
 }
 section:last-child{
     right: 0px;
-}
+} */
 header{
     height:62px;
-    position: fixed;
-    top: 0;
+    /* position: fixed; */
+    /* top: 0; */
     background-color: #303030;
-    z-index: 100;
+    /* z-index: 100; */
 }
-.left header{
+/* .left header{
     left: 0;
     width: 50%;
 }
 .right header{
     right: -5px;
     width: 50%;
-}
+} */
 #leftdir,#rightdir{
     height: 31px;
     line-height: 31px;
@@ -115,30 +112,30 @@ td{
 }
 footer{
     background-color: #585858;
-    position: fixed;
-    bottom: 0;
-    display: block;
-    width: 50%;
+    /* position: fixed; */
+    /* bottom: 0; */
+    /* display: block; */
+    /* width: 50%; */
     height: 31px;
     line-height: 31px;
     font-size: 20px;
     color: white;
-    z-index: 110;
+    /* z-index: 110; */
 }
-.right footer{
+/* .right footer{
     right: -5px;
-}
+} */
 
 .quicknav{
-    display: inline;
     position: absolute;
-    
-    bottom: 66px;
-    background-color: red;
-    box-sizing: border-box;
+    bottom: 36px;
+    height: 31px;
+    border: 1px solid gray;
+    background-color: #585858;
     line-height: 31px;
-    z-index: 99;
-    right: 0;
+    width: 100px;
+    right: 5px;
+
 }
 ::-webkit-scrollbar  
 {  
@@ -162,3 +159,4 @@ footer{
     background-color: gray;  
     border: 1px solid gray;
 }  
+.hide{display: none;}

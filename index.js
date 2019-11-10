@@ -5,6 +5,8 @@ var exec = require('child_process').exec;
 var dirnow=["",""];
 var cursorPosition=[0,0];
 var key=1; //0:left pan, 1:right pan; initialize right fistly
+
+var filterStr=["",""];
 // initial filelist after html loaded
 window.onload=function(){
     var dirnowL="C:/Users/cquda/";
@@ -15,7 +17,20 @@ window.onload=function(){
 
 //window resize
 window.onresize=function(){
-    
+    // get window height
+    let windowheight =this.document.documentElement.clientHeight 
+    var sectionelem=this.document.getElementsByTagName("section")
+    // set <main> height 
+    this.document.getElementsByTagName("main")[0].style.height=windowheight.toString()+"px"
+    // set <section> height
+    sectionelem[0].style.height=(windowheight-93).toString()+"px";
+    this.console.log((windowheight-93).toString()+"px")
+    sectionelem[1].style.height=(windowheight-93).toString()+"px";
+
+    // let cmdmargintop=h*0.3
+    // let cst=cmdmargintop.toString()
+
+    // this.document.getElementsByClassName("cmdw")[0].style.margin = (h*0.3).toString()+"px auto"
 }
 var EventEmitter = require('events').EventEmitter; 
 var event = new EventEmitter(); 
@@ -34,7 +49,7 @@ setTimeout(function() {
 document.onkeydown = function (event) {
     var e = event || window.event || arguments.callee.caller.arguments[0];
     // when key "BackSpace" pressed
-    if (e && e.keyCode == 8) { 
+    if (e && e.keyCode == 8 && filterStr[key]=="") { 
         // delete last folder
         refreshDirnow();
         var dirbackarr=dirnow[key].split("/")
@@ -98,7 +113,28 @@ document.onkeydown = function (event) {
         cursorBG(cursorPosition[key],key,"#49483e");
     }
     else{
-        // if 
+        var quickNavEle=document.getElementsByClassName("quicknav");
+        if (e && e.keyCode == 8){
+            console.log(filterStr[key])
+            let fstr=filterStr[key];
+            console.log(fstr)
+            fstr=fstr.slice(0,fstr.length-1);
+            filterStr[key]=fstr;
+            console.log(fstr)
+        }
+        else{
+            var keycodenow=e.keyCode;
+            var keystr=String.fromCharCode(keycodenow);
+            filterStr[key]=filterStr[key]+keystr.toString();
+        }
+        quickNavEle[key].innerHTML=filterStr[key];
+        // hide box if empty
+        if(quickNavEle[key].innerHTML){
+            quickNavEle[key].classList.remove("hide")
+        }
+        else{
+            quickNavEle[key].classList.add("hide")
+        }
     }
 }
 
@@ -232,7 +268,19 @@ function showList(directory){
         if (err) {
             return console.error(err);
         }
+        // filter hiden file
+        files=files.filter(item => !(/(^|\/)\.[^\/\.]/g).test(item));
+        // files=files.filter(item => !(".regtrans-ms").test(item));
         //show filelist in html
+        var filescopy=files;
+        for(let i=0, k=0;i<files.length;i++,k++){
+            if(files[k].slice(-11,files[k].length)=="regtrans-ms"||files[k].slice(-4,files[k].length)==".blf"){
+                filescopy.splice(k,1);
+                k=k-1;
+                console.log("brhgin"+files[i])
+            }
+        }
+        files=filescopy;
         var fileListTable=document.getElementsByClassName("inflist");
         if(!key){
             var listTable=fileListTable[1]; //left
