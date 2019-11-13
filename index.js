@@ -8,6 +8,10 @@ var key=1; //0:left pan, 1:right pan; initialize right fistly
 
 var filterStr=["",""];
 
+var fm = require("./js/fman");
+var pane = require("./js/pane");
+
+var fman = new fm();
 // require("./js/command")
 // require("./js/getelement")
 // require("./js/shortcut")
@@ -19,24 +23,13 @@ window.onload=function(){
     var dirnowR="C:/Users/";
     dirnow=[dirnowL,dirnowR];
     showList(dirnow[key]);
+    // showList(dirnow[0]);
 }
 
 //window resize
+
 window.onresize=function(){
-    // get window height
-    let windowheight =this.document.documentElement.clientHeight
-    var sectionelem=this.document.getElementsByTagName("section")
-    // set <main> height
-    this.document.getElementsByTagName("main")[0].style.height=windowheight.toString()+"px"
-    // set <section> height
-    sectionelem[0].style.height=(windowheight-93).toString()+"px";
-    this.console.log((windowheight-93).toString()+"px")
-    sectionelem[1].style.height=(windowheight-93).toString()+"px";
-
-    // let cmdmargintop=h*0.3
-    // let cst=cmdmargintop.toString()
-
-    // this.document.getElementsByClassName("cmdw")[0].style.margin = (h*0.3).toString()+"px auto"
+    fman.resetWindowHeight()
 }
 var EventEmitter = require('events').EventEmitter;
 var event = new EventEmitter();
