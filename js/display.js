@@ -86,7 +86,7 @@ function showList(directory){
         showdirheader(directory);
         filedblclickfun(); //link ondblclick filedblclickfun() should be in call back function
         clickfun();
-        clearBothBG();
+        clearBothBG();~
         resetCursor();
         refreshDirnow();
         // cursorBG(cursorPosition[key],"#49483e"); //init background

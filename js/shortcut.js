@@ -3,8 +3,7 @@ document.onkeydown = function (event) {
     // when key "BackSpace" pressed
     if (e && e.keyCode == 8 && filterStr[key]=="") { 
         // delete last folder
-        refreshDirnow();
-        var dirbackarr=dirnow[key].split("/")
+        var dirbackarr=leftpane.[key].split("/")
         dirbackarr.splice(-2,1)
         var dirback=dirbackarr.join('/');
         console.log("back is "+dirback);
