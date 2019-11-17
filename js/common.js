@@ -17,22 +17,39 @@ function fileSizeFormat(size){
     return size.toString()+"B";
 }
 
-function refreshDirnow(){
-    let dirnowL=document.getElementById("leftdir").innerText;
-    let dirnowR=document.getElementById("rightdir").innerText;
-    dirnow=[dirnowL,dirnowR];
+//file filter 
+function fileFilter(panenow, str, files){
+    var visibleFileList = [];
+    for(let i=0; i<files.length-1; i++){
+        panenow.fileItems[i].parentNode.classList.remove("hide")
+    }
+    for(let i=0,k=0; i<files.length-1; i++){
+        var filename = files[i]
+        visibleFileList[k]=i
+        k++
+        for(let j=0; j<str.length-1;j++){
+            
+            if(filename.toUpperCase().indexOf(str[j])==-1){
+                panenow.fileItems[i].parentNode.classList.add("hide")
+                k--;
+                continue;
+            }                
+                
+        }
+    }
+    let rangeArray = (start, end) => Array(end - start + 1).fill(0).map((v, i) => i + start)
+    if(!str){
+        return  rangeArray(0,panenow.fileList[0].length-1);
+    }
+    // console.log(visibleFileList)
+    return visibleFileList
 }
-
-//scroll into view when press up and down arrow
-function fileinview(){
-    let filebtns=getfilebtns();
-    filebtns[cursorPosition[key]].scrollIntoViewIfNeeded();
-    // window.location.hash=filebtns[cursorPosition[key]].id;  //show the file selected in view.
+function hello(){
+    console.log("hello")
 }
-
 module.exports = {
     dateFormat, 
-    refreshDirnow,
     fileSizeFormat, 
-    fileinview
+    fileFilter,
+    hello
 }

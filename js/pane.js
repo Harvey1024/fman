@@ -73,6 +73,7 @@ class pane extends fman {
                 let filedir = this.dirs.now+ this.fileItems[i].innerHTML
                 if(this.fileList[3][i]=="folder"){
                     this.showList(filedir+"/",i);
+                    // this.dirs.set(filedir+"/")
                 }
                 else{
                     // if file, open file by default program of system

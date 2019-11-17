@@ -36,17 +36,3 @@ window.onclick = function(){
         leftpane.inactive();
     }
 }
-// var EventEmitter = require('events').EventEmitter;
-// var event = new EventEmitter();
-// event.on('some_event', function() {
-
-//     key=0; //init left pan
-//     console.log('some_event 事件触发k=%d',key);
-
-//     showList(dirnow[key]);
-// });
-
-// setTimeout(function() {
-//     event.emit('some_event');
-// }, 80);
-
