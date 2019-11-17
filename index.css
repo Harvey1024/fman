@@ -127,7 +127,7 @@ footer{
     right: -5px;
 } */
 
-.quicknav{
+.quicknavleft,.quicknavright{
     position: absolute;
     bottom: 36px;
     height: 31px;

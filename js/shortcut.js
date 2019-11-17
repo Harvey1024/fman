@@ -1,98 +1,93 @@
 document.onkeydown = function (event) {
     var e = event || window.event || arguments.callee.caller.arguments[0];
+    
+    
+    if(pane.activepane == leftpane.whichPane){
+        var panenow = leftpane;
+        var panelast = rightpane;
+    }
+    else{
+        var panenow = rightpane;
+        var panelast = leftpane;
+    }
     // when key "BackSpace" pressed
-    if (e && e.keyCode == 8 && filterStr[key]=="") { 
+    if (e && e.keyCode == 8 && filterStr[pane.activepane]=="") { 
         // delete last folder
-        var dirbackarr=leftpane.[key].split("/")
-        dirbackarr.splice(-2,1)
-        var dirback=dirbackarr.join('/');
-        console.log("back is "+dirback);
-        showList(dirback);  
+        var dirbackarr=panenow.dirs.now.split("/")
+        if(dirbackarr.length>2){
+            dirbackarr.splice(-2,1)
+            var dirback=dirbackarr.join('/');
+            //refresh folder
+            panenow.showList(dirback)
+        }
     }
     // when key "up arrow" pressed
     else if (e && e.keyCode == 38) {
         e.preventDefault(); //prevent previeous scroll event
-        let filebtns=getfilebtns();
-        if(cursorPosition[key]==0)
-            cursorPosition[key]=0;
-        else
-            cursorPosition[key]-=1;
-        filebtns[cursorPosition[key]].click();
-        filebtns[cursorPosition[key]].scrollIntoViewIfNeeded();
+        var cursorPosNow = panenow.key-1;
+        if(cursorPosNow<0)
+            cursorPosNow = 0;
+        panenow.resetCursor(cursorPosNow)
+        panenow.fileItems[panenow.key].click();
+        panenow.fileItems[panenow.key].scrollIntoViewIfNeeded();
     }
     // when key "down arrow" pressed
     else if (e && e.keyCode == 40) {
-        e.preventDefault();
-        let filebtns=getfilebtns();
-        if(cursorPosition[key]==filebtns.length-1)
-            cursorPosition[key]=filebtns.length-1;
-        else
-            cursorPosition[key]+=1;
-        filebtns[cursorPosition[key]].click();
-        filebtns[cursorPosition[key]].scrollIntoViewIfNeeded();
+        e.preventDefault(); //prevent previeous scroll event
+        var cursorPosNow = panenow.key+1;
+        if(cursorPosNow>panenow.fileItems.length-1)
+            cursorPosNow = panenow.fileItems.length-1;
+        panenow.resetCursor(cursorPosNow)
+        panenow.fileItems[panenow.key].click();
+        panenow.fileItems[panenow.key].scrollIntoViewIfNeeded();
     }
     // when "enter" pressed
     else if (e && e.keyCode == 13) {
         //should be optimize with dblckick function
-        let filebtns=getfilebtns();
-
-        if(filebtns[cursorPosition[key]].classList[1]=="folder"){
-            // if folder, open folder and show file list in folder
-            console.log("this is dir="+dirnow[key]);
-            refreshDirnow();
-            showList(dirnow[key]+filebtns[cursorPosition[key]].innerText+"/"); 
-        } 
+        let i = panenow.key;
+        let filedir = panenow.dirs.now+ panenow.fileItems[i].innerHTML; 
+        if(panenow.fileList[3][i]=="folder"){
+            panenow.showList(filedir+"/",i);
+            // this.dirs.set(filedir+"/")
+        }
         else{
-            dirnowL=document.getElementById("leftdir").innerHTML;
             // if file, open file by default program of system
-            exec("start"+" "+dirnow[key]+"/"+filebtns[cursorPosition[key]].innerText);
-            console.log("this is file "+filebtns[cursorPosition[key]].id);
+            exec("start"+" "+filedir);
         }
     }
     // when key "tap" pressed
     else if (e && e.keyCode == 9) {
-        if(!key){
-            key=1;
-            
-        }
-        else{
-            key=0;
-        }
-        document.getElementsByTagName("section")[key].click()
-        fileinview();
-        clearBothBG();
-        cursorBG(cursorPosition[key],key,"#49483e");
+            panenow.inactive();
+            panelast.active();
     }
     //esc
     else if(e && e.keyCode == 27){
         // hide filter box
-        filterStr[key]="";
-        var quickNavEle=document.getElementsByClassName("quicknav");``
-        quickNavEle[key].classList.add("hide");
+        filterStr[pane.activepane]="";
+        panenow.quicknav.classList.add("hide");
     }
     else{
-        var quickNavEle=document.getElementsByClassName("quicknav");
         if (e && e.keyCode == 8){
             //if backspace, str backspace as well. and refresh box
-            console.log(filterStr[key])
-            let fstr=filterStr[key];
+            console.log(filterStr[pane.activepane])
+            let fstr=filterStr[pane.activepane];
             console.log(fstr)
             fstr=fstr.slice(0,fstr.length-1);
-            filterStr[key]=fstr;
+            filterStr[pane.activepane]=fstr;
             console.log(fstr)
         }
         else{
             var keycodenow=e.keyCode;
             var keystr=String.fromCharCode(keycodenow);
-            filterStr[key]=filterStr[key]+keystr.toString();
+            filterStr[pane.activepane]=filterStr[pane.activepane]+keystr.toString();
         }
-        quickNavEle[key].innerHTML=filterStr[key];
+        panenow.quicknav.innerHTML=filterStr[pane.activepane];
         // hide box if empty
-        if(quickNavEle[key].innerHTML){
-            quickNavEle[key].classList.remove("hide")
+        if(panenow.quicknav.innerHTML){
+            panenow.quicknav.classList.remove("hide")
         }
         else{
-            quickNavEle[key].classList.add("hide")
+            panenow.quicknav.classList.add("hide")
         }
     }
 }
