@@ -26,6 +26,7 @@ class fman{
     active(){
         this.resetCursor(this.key)
         activepane = this.whichPane;
+        // this.paneId.focus();
     }
     refreshFolder(){
         this.fileItems = document.getElementsByClassName("name"+this.whichPane)

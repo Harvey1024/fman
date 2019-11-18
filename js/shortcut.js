@@ -7,17 +7,21 @@ document.onkeydown = function (event) {
 
     var e = event || window.event || arguments.callee.caller.arguments[0];
     
-    if(pane.activepane == leftpane.whichPane){
-        var panenow = leftpane;
-        var panelast = rightpane;
-    }
-    else{
-        var panenow = rightpane;
-        var panelast = leftpane;
+    var [ panelast,  panenow] = getPane();
+
+    var inputvalue = panenow.quicknav.children[0].value;
+    const inputEle = panenow.quicknav
+    //ctrl + p
+    
+    if(e && e.ctrlKey && e.keyCode == 80){        
+        var quickcmd = document.getElementsByClassName("quickcmd")[0]
+        quickcmd.classList.remove("hide")
+        document.getElementsByClassName("cmdheader")[0].children[0].focus();
     }
     
     // when key "BackSpace" pressed
-    if (e && e.keyCode == 8 && filterStr[pane.activepane]=="") { 
+   
+    if (e && e.keyCode == 8 && inputvalue=="") { 
         // delete last folder
         var dirbackarr=panenow.dirs.now.split("/")
         if(dirbackarr.length>2){
@@ -47,13 +51,10 @@ document.onkeydown = function (event) {
                 cursorPosNow = panenow.key;
             }
         }
-        else if(cursorPosNow<=0){ // cursorPosNow ==0 and visble. 
+        else if(cursorPosNow<0){ // cursorPosNow ==0 and visble. 
             cursorPosNow = panenow.key
         }
 
-        
-        // console.log(visibleFileNum)
-        
         panenow.resetCursor(cursorPosNow)
         panenow.fileItems[cursorPosNow].click();
         panenow.fileItems[cursorPosNow].scrollIntoViewIfNeeded();
@@ -62,18 +63,32 @@ document.onkeydown = function (event) {
     else if (e && e.keyCode == 40) {
         e.preventDefault(); //prevent previeous scroll event
         var cursorPosNow = panenow.key+1;
+        if(cursorPosNow<= panenow.fileItems.length-1){
+            var cursorNext = cursorPosNow;
+            var nextFileCLlen = panenow.fileItems[cursorPosNow].parentNode.classList.length
+            if(nextFileCLlen==1){   //if hide
+
+            }
+            else{
+                cursorPosNow = cursorNext;
+            }
+        }
+        else{
+            cursorPosNow = panenow.key;
+        }
         if(cursorPosNow<= panenow.fileItems.length-1 & panenow.fileItems[cursorPosNow].parentNode.classList.length==1){
             var cursorNext = cursorPosNow;
-            for(let i=cursorPosNow+1; i<panenow.fileItems.length-1;i++){
+            for(let i=cursorPosNow; i<panenow.fileItems.length-1;i++){
                 console.log("hide "+ i.toString())
                 cursorNext =i;
                 if(panenow.fileItems[i].parentNode.classList.length==0)
                 {
+                    console.log("break ")
                     break;
                 }
                 
             }
-            if(cursorNext<panenow.fileItems.length-1)
+            if(cursorNext!=panenow.fileItems.length-1)
                 cursorPosNow=cursorNext;
             else{
                 cursorPosNow = panenow.key;
@@ -94,18 +109,25 @@ document.onkeydown = function (event) {
         let i = panenow.key;
         let filedir = panenow.dirs.now+ panenow.fileItems[i].innerHTML; 
         if(panenow.fileList[3][i]=="folder"){
+            //open folder
             panenow.showList(filedir+"/",i);
-            // this.dirs.set(filedir+"/")
+            //reset filter input and hide input box
+            panenow.quicknav.children[0].value = ""
+            inputEle.classList.add("hide")
+            
         }
         else{
             // if file, open file by default program of system
             exec("start"+" "+filedir);
-        }
+        }        
     }
     // when key "tap" pressed
     else if (e && e.keyCode == 9) {
-            panenow.inactive();
-            panelast.active();
+        e.preventDefault(); //prevent previeous tap event
+        panenow.inactive();
+        panelast.active();
+        if(panelast.quicknav.children[0].value)    //if not empty
+            panelast.quicknav.children[0].focus()
     }
     //esc
     else if(e && e.keyCode == 27){
@@ -113,32 +135,47 @@ document.onkeydown = function (event) {
         filterStr[pane.activepane]="";
         panenow.quicknav.classList.add("hide");
         visibleFileNum=cm.fileFilter(panenow, filterStr[pane.activepane],panenow.fileList[0]);
+        document.getElementsByClassName("quickcmd")[0].classList.add("hide")
+        panenow.quicknav.children[0].value=""
     }
     else{
         filterbegin = 1;
-        // visibleFileNum = rangeArray(0,panenow.fileList[0].length);
-        if (e && e.keyCode == 8){
-            //if backspace, str backspace as well. and refresh box
-            // console.log(filterStr[pane.activepane])
-            let fstr=filterStr[pane.activepane];
-            // console.log(fstr)
-            fstr=fstr.slice(0,fstr.length-1);
-            filterStr[pane.activepane]=fstr;
-            // console.log(fstr)
-        }
-        else{
-            var keycodenow=e.keyCode;
-            var keystr=String.fromCharCode(keycodenow);
-            filterStr[pane.activepane]=filterStr[pane.activepane]+keystr.toString();
-        }
-        panenow.quicknav.innerHTML=filterStr[pane.activepane];
-        visibleFileNum=cm.fileFilter(panenow, filterStr[pane.activepane],panenow.fileList[0]);
-        // hide box if empty
-        if(panenow.quicknav.innerHTML){
+        //if filter is hiden, remove class hide
+        if(panenow.quicknav.classList[1]=="hide"){
             panenow.quicknav.classList.remove("hide")
-        }
-        else{
-            panenow.quicknav.classList.add("hide")
+            panenow.quicknav.children[0].focus()
+        }        
+    }
+}
+
+function inputFilter(){
+    var [ panelast,  panenow] = getPane();
+
+    var inputvalue = panenow.quicknav.children[0].value
+    if(!inputvalue){        //if empty, hide
+        panenow.quicknav.classList.add("hide")
+    }
+    //show files which include string input.
+    cm.fileFilter(panenow, inputvalue ,panenow.fileList[0]);
+    
+    //move cursor to first file visible
+    for(let i =0; i<panenow.fileItems.length;i++){
+        if(panenow.fileItems[i].parentNode.classList.length==0){
+            panenow.resetCursor(i)
+            break;
         }
     }
 }
+
+function getPane(){
+    if(pane.activepane == leftpane.whichPane){
+        var panenow = leftpane;
+        var panelast = rightpane;
+    }
+    else{
+        var panenow = rightpane;
+        var panelast = leftpane;
+    }
+    return [panelast, panenow];
+}
+

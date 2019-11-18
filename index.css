@@ -5,6 +5,9 @@
     font-size: 20px;
     box-sizing: border-box;
 }
+input{display: inline-block;width: 100%;
+background-color: #585858;}
+input:focus {outline:none;}
 ul{list-style: none;}
 .bd{border:1px solid red;}
 /* body{
@@ -136,7 +139,9 @@ footer{
     line-height: 31px;
     width: 100px;
     right: 5px;
-
+}
+.quicknavleft input,.quicknavright input{
+    color: white;
 }
 ::-webkit-scrollbar  
 {  
@@ -161,3 +166,32 @@ footer{
     border: 1px solid gray;
 }  
 .hide{display: none;}
+
+.quickcmd{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    /* background-color: red; */
+}
+.cmdmain{
+    margin: 100px auto;
+    width: 600px;
+    box-shadow: 0 5px 20px black;
+    background-color: #404040;
+    
+}
+.cmdheader{
+    padding: 5px;
+    background-color: white;
+}
+.cmdheader input{
+    width: 100%;
+}
+.cmdcontent span{
+    padding: 0 5px;
+}
+.cmdcontent li:hover{
+    background-color: #616161;
+}

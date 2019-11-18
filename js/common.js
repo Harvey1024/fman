@@ -20,22 +20,25 @@ function fileSizeFormat(size){
 //file filter 
 function fileFilter(panenow, str, files){
     var visibleFileList = [];
-    for(let i=0; i<files.length-1; i++){
+    for(let i=0; i<=files.length-1; i++){
         panenow.fileItems[i].parentNode.classList.remove("hide")
     }
-    for(let i=0,k=0; i<files.length-1; i++){
+    for(let i=0,k=0; i<=files.length-1; i++){
         var filename = files[i]
         visibleFileList[k]=i
         k++
-        for(let j=0; j<str.length-1;j++){
+        // for(let j=0; j<str.length-1;j++){
             
-            if(filename.toUpperCase().indexOf(str[j])==-1){
-                panenow.fileItems[i].parentNode.classList.add("hide")
-                k--;
-                continue;
-            }                
+        //     if(filename.toUpperCase().indexOf(str[j])==-1){
+        //         panenow.fileItems[i].parentNode.classList.add("hide")
+        //         k--;
+        //         continue;
+        //     }                
                 
-        }
+        // }
+        if(filename.toUpperCase().indexOf(str.toUpperCase())==-1){
+            panenow.fileItems[i].parentNode.classList.add("hide")
+        }      
     }
     let rangeArray = (start, end) => Array(end - start + 1).fill(0).map((v, i) => i + start)
     if(!str){

@@ -33,7 +33,9 @@
         </table>
       </section>
       <footer id="leftfooter">left footer</footer>
-      <div class="quicknavleft hide">filter</div>
+      <div class="quicknavleft hide">
+          <input type="text" oninput="inputFilter()">
+      </div>
     </div>
     <!-- <div class="centerline"></div> -->
     <div class="right ">
@@ -60,9 +62,22 @@
             </table>
       </section>
       <footer id="rightfooder">right footer</footer>
-      <div class="quicknavright hide">filter</div>
+      <div class="quicknavright hide">
+          <input type="text" oninput="inputFilter()">
+      </div>
     </div>
   </main>
+  <div class="quickcmd hide">
+    <div class="cmdmain">
+        <div class="cmdheader">
+          <input type="text">
+        </div>
+        <ul class="cmdcontent">
+          <li><span>file1</span></li>
+          <li><span>file2</span></li>
+        </ul>
+    </div>
+  </div>
   </body>
   <script type="text/javascript" src="index.js"></script>
     
