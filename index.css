@@ -188,6 +188,7 @@ footer{
 }
 .cmdheader input{
     width: 100%;
+    background-color: white;
 }
 .cmdcontent span{
     padding: 0 5px;
