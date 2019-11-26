@@ -8,76 +8,64 @@ class pane extends fman {
     ini(){
         this.showList(this.dirs.now);
     }
-    showList(paneDir){        
-        //read dircectory        
-        fs.readdir(paneDir,(err, files)=>{
-            if(err){
-                return console.error(err);
-            }
-            else{
-                var fileNameList=files.filter(item => !(/(^|\/)\.[^\/\.]/g).test(item));
-                // fet file dates and show file and folder in html     
-                this.getFileState(paneDir,fileNameList);
-            }
-        });
-    }
-    getFileState(directory,files){
-        var fileNameList = files;
-        var fileSizeList = [];
-        var fileDateList = []; 
-        var folderList = [];
-        for(let i=0; i<files.length; i++){
-            var filedir=directory+files[i];
-            
-            fs.stat(filedir, (err, stats)=>{
-                if(err){
-                    fileDateList[i]=" ";
-                    fileSizeList[i]=" ";
-                    folderList[i] = 0;
+    async showList(paneDir){        
+        //clear filelist 
+        this.fileList = []
+        //read dircectory
+        const dir = await fs.promises.readdir(paneDir);
+        var k = 0;
+        for await(const dirent of dir){
+            //get dirent type, show type 2 file or folder
+            var filedir = paneDir+dirent;
+            // electron can't use promises.opendir, then can't get fs.dirent
+            // var direnttype = dirent[Object.getOwnPropertySymbols(dirent)[0]];
+            // if(direnttype==2){
+            //system files are not alowed get stats, then use try
+            try{
+                const stats = await fs.promises.stat(filedir);
+                if(stats.isDirectory()){
+                    var filetype = "folder";
+                    var filedate = "";
+                    var filesize = "";
                 }
-                else {
-                    if(stats.isFile()){
-                        fileDateList[i]=common.dateFormat(stats["atime"]);
-                        fileSizeList[i]=common.fileSizeFormat(stats["size"]);
-                        folderList[i] = 0;
-                    }
-                    else if(stats.isDirectory()){
-                        fileDateList[i]=" ";
-                        fileSizeList[i]=" ";
-                        folderList[i] = "folder";
-                    }
-                    else{
-                        fileDateList[i]=" ";
-                        fileSizeList[i]=" ";
-                        folderList[i] = 0;
-                    }
-                    this.dirs.set(directory);
-                    this.setDirHeader(directory);
-                    this.fileList = [fileNameList, fileSizeList, fileDateList, folderList];
-                    this.showFileList()
-                    this.addOnclick();
-                    this.addOndblclick();                
-                    this.resetCursor(0);
-
-                }               
-            });
+                else{
+                    var filetype = "file";
+                    var filedate = common.dateFormat(stats.atime);
+                    var filesize = common.fileSizeFormat(stats.size);
+                }                    
+                this.fileList[k++] = new file(filedir,dirent,filetype,filesize,filedate);
+            }catch(err){
+                console.error(err)
+            }
+            // }
         }
-       
-        return [fileSizeList, fileDateList, folderList]
+        this.showFileList();
+        this.dirs.set(paneDir);
+        this.setDirHeader(paneDir);
+        this.addOnclick();
+        this.addOndblclick();                
+        this.resetCursor(0);
+
     }
     addOndblclick(){        
         this.refreshFolder();
         for(let i=0; i<this.fileItems.length;i++){
             this.fileItems[i].addEventListener('dblclick', ()=>{
                 this.key = i;                
-                let filedir = this.dirs.now+ this.fileItems[i].innerHTML
-                if(this.fileList[3][i]=="folder"){
+                var filedir = this.fileList[i].dir;
+                //if filename contain space, add "" for filename.
+                if(this.fileList[i].name.indexOf(" ")!=-1){
+                    let splitFileDir = this.fileList[i].dir.split("/")
+                    splitFileDir[splitFileDir.length-1] = '"'+this.fileList[i].name+'"'
+                    var filedir = splitFileDir.join("/");
+                }
+                if(this.fileList[i].type=="folder"){
                     this.showList(filedir+"/",i);
-                    // this.dirs.set(filedir+"/")
                 }
                 else{
                     // if file, open file by default program of system
-                    exec("start"+" "+filedir);
+                    // exec("start"+" "+filedir.toString());
+                    exec(filedir);
                 }
             });
         }
@@ -89,4 +77,13 @@ class pane extends fman {
     newfolder(){}
 }
 
+class file{
+    constructor(dir, name, type, size, atime){
+        this.dir = dir;
+        this.name = name;
+        this.type = type;
+        this.size = size;
+        this.atime = atime;
+    }
+}
 module.exports = pane;

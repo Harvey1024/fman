@@ -94,14 +94,15 @@ header table{
     border-top: 1px groove #000;
     border-bottom: 1px groove #000;
 }
-.nameleft,.nameright,.nameheader{width: 65%; overflow: hidden; 
+.nameleft,.nameright,.nameheader{width: 50%; overflow: hidden; 
     min-width: 30px;
+    
 }
 .nameleft:hover,.nameright:hover,.tableheader:hover{
     background-color: #49483e;
 }
-.size,.sizeheader{width: 10%;overflow: hidden;}
-.date,.dateheader{width: 25%;overflow: hidden;}
+.size,.sizeheader{width: 20%;overflow: hidden;}
+.date,.dateheader{width: 30%;overflow: hidden;}
 tr,td,table,header{box-sizing: border-box;}
 tr{
     display: flex;
@@ -112,6 +113,7 @@ td{
     display: block;
     font-size: 16px;
     padding-left: 5px;
+    height: 31px;
 }
 footer{
     background-color: #585858;

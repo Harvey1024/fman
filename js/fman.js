@@ -36,26 +36,21 @@ class fman{
     }
     showFileList(){
         //add file list in html
-        var fileNameList = this.fileList[0];
-        
-        var fileSizeList = this.fileList[1];
-        var fileDateList = this.fileList[2];
-                
-        var folderList = this.fileList[3];
         var paneInnerText = "";
         var nameClassStr =""; 
         var sizeStr = "";
         var dateStr = "";
-        for(let i = 0; i<fileNameList.length; i++){
-            nameClassStr = "<td class='name" + this.whichPane +"'>"+fileNameList[i]+"</td>";
-            sizeStr = "<td class='size'>"+fileSizeList[i] + "</td>";
-            dateStr = "<td class='date'>" + fileDateList[i] + "</td>";
+        for(let i = 0; i<this.fileList.length; i++){
+            let filename = this.fileList[i].name;
+            let filesize = this.fileList[i].size;
+            let filedate = this.fileList[i].atime;
+            nameClassStr = "<td class='name" + this.whichPane +"'>"+filename+"</td>";
+            sizeStr = "<td class='size'>"+ filesize + "</td>";
+            dateStr = "<td class='date'>" + filedate + "</td>";
             paneInnerText = paneInnerText + "<tr>"+nameClassStr+sizeStr+dateStr+"</tr>";
         }
         this.paneId.innerHTML = paneInnerText;
-
     }
-    
     addOnclick(){
         //add onclick function on each file
         this.refreshFolder();
