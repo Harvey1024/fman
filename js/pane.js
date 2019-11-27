@@ -53,16 +53,19 @@ class pane extends fman {
             this.fileItems[i].addEventListener('dblclick', ()=>{
                 this.key = i;                
                 var filedir = this.fileList[i].dir;
-                //if filename contain space, add "" for filename.
-                if(this.fileList[i].name.indexOf(" ")!=-1){
-                    let splitFileDir = this.fileList[i].dir.split("/")
-                    splitFileDir[splitFileDir.length-1] = '"'+this.fileList[i].name+'"'
-                    var filedir = splitFileDir.join("/");
-                }
+                
                 if(this.fileList[i].type=="folder"){
                     this.showList(filedir+"/",i);
                 }
                 else{
+                    //if filename contain space, add "" for filename.
+                    var splitFileDir = this.fileList[i].dir.split("/")
+                    for(let j=0; j<splitFileDir.length;j++){
+                        if(splitFileDir[j].indexOf(" ")!=-1)
+                            splitFileDir[j] = '"'+splitFileDir[j]+'"';
+                    }
+                    splitFileDir[splitFileDir.length-1] = '"'+this.fileList[i].name+'"'
+                    var filedir = splitFileDir.join("/");
                     // if file, open file by default program of system
                     // exec("start"+" "+filedir.toString());
                     exec(filedir);

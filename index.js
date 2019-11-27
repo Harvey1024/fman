@@ -2,7 +2,7 @@ var fs = require("fs")
 var exec = require('child_process').exec;
 
 
-var dirnow=["C:/Users/cquda/","C:/users/cquda/onedrive/"];         //file dir for left and right pane.
+var dirnow=["C:/Users/","C:/"];         //file dir for left and right pane.
 // var cursorPosition={"left":0, "right":0};   //the order number of file selected for each pane.
 var filterStr={"left":0, "right":0};      //fileter string for each pane
 
