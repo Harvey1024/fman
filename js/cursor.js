@@ -1,11 +1,13 @@
 class cursor {
-    constructor(name){
-        this.name=name
-    }
-    clearBothBG(){
+  constructor (name) {
+    this.name = name
+  }
 
-    }
-    resetCursor(){
+  clearBothBG () {
 
-    }
+  }
+
+  resetCursor () {
+
+  }
 }
