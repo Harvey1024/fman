@@ -94,19 +94,25 @@ header table{
     border-top: 1px groove #000;
     border-bottom: 1px groove #000;
 }
-.nameleft,.nameright,.nameheader{width: 50%; overflow: hidden; 
-    min-width: 30px;
-    
+.nameleft,.nameright,.nameheader{
+    width: 50%; 
+    overflow: hidden; 
+    word-break:break-all;
 }
 .nameleft:hover,.nameright:hover,.tableheader:hover{
     background-color: #49483e;
 }
-.size,.sizeheader{width: 20%;overflow: hidden;}
-.date,.dateheader{width: 30%;overflow: hidden;}
+.size,.sizeheader{
+    width: 20%;
+    overflow: hidden;}
+.date,.dateheader{
+    width: 30%;
+    overflow: hidden;}
 tr,td,table,header{box-sizing: border-box;}
 tr{
     display: flex;
     flex-direction: row;
+    flex-basis: 10;
     width: 100%;
 }
 td{
