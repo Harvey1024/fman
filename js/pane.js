@@ -16,6 +16,7 @@ class Pane extends Fman {
   async showList(paneDir, anotherPane) {
     // clear filelist
     this.fileList = []
+    // refersh dirs
     this.dirs.now =  paneDir
     // read dircectory
     const dir = await fs.promises.readdir(paneDir)
@@ -41,7 +42,7 @@ class Pane extends Fman {
         }
         filedate = common.dateFormat(stats.atime)
         this.fileList[k] = new file(filedir, dirent, filetype, filesize, filedate)
-        this.fileList[k].formatDir()  //format dir if which contain space
+        
         this.ishidden(this.fileList[k])
         k = k+1
       } catch (err) {
@@ -54,8 +55,7 @@ class Pane extends Fman {
     // this.ishidden()
     this.showFileList()
     
-    // this.dirs.set(paneDir)
-    // this.setDirHeader(paneDir)
+    this.setDirHeader(paneDir)
     this.addOnclick(anotherPane)
     this.addOndblclick(anotherPane)
     
@@ -88,15 +88,17 @@ class Pane extends Fman {
       this.fileItems[i].addEventListener('dblclick', () => {
         this.key = i
         
-        var filedir = this.fileList[i].dir
-
+        // for fs, the dir needn't add "", but for exec, the dir should add "" for which include space.
         if (this.fileList[i].type == 'folder') {
-          this.showList(filedir + '/', anotherPane)
+          this.showList(this.fileList[i].dir + '/', anotherPane)
           // refresh dir
-          this.dirs.now = filedir + '/'
+          console.log(this.fileList[i])
+          // this.dirs.now = this.fileList[i].dir + '/'
         } 
         else {
-          exec( this.fileList[i].dir)
+          // if file, add "" for file or folder name contain space
+
+          exec( this.fileList[i].formatDir())
         }
       })
     }
@@ -125,7 +127,8 @@ class file {
       if (splitFileDir[j].indexOf(' ') != -1) { splitFileDir[j] = '"' + splitFileDir[j] + '"' }
     }
     // splitFileDir[splitFileDir.length - 1] = '"' + this.name + '"'
-    this.dir = splitFileDir.join('/')
+    console.log(splitFileDir.join('/'))
+    return splitFileDir.join('/')
   }
 }
 module.exports = Pane

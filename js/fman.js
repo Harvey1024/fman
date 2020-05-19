@@ -97,7 +97,7 @@ class Fman {
     // if position="hide", none of file is hightlight
     this.refreshFolder()
     for (let i = 0; i < this.fileItems.length; i++) {
-      this.fileList[i].formatDir()
+      // this.fileList[i].formatDir()
       if (this.key === 'hideall' || i != this.key) { 
         this.inactive(i)
       } 
