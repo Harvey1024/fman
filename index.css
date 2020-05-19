@@ -99,8 +99,9 @@ header table{
     overflow: hidden; 
     word-break:break-all;
 }
-.nameleft:hover,.nameright:hover,.tableheader:hover{
+.filelist:hover,.tableheader:hover{
     background-color: #49483e;
+    cursor: default;
 }
 .size,.sizeheader{
     width: 20%;
@@ -203,4 +204,7 @@ footer{
 }
 .cmdcontent li:hover{
     background-color: #616161;
+}
+.highlight {
+    background-color: #49483e;
 }

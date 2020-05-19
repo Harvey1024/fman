@@ -1,12 +1,15 @@
 var cm = require('./js/common')
-var visibleFileNum = []
-var visblekey = 0
+var exec = require('child_process').exec
+// var pane = require('./pane')
+// var mianpane = require('./js/mainpane')
+// var visibleFileNum = []
+// var visblekey = 0
 var filterbegin = 0
-var rangeArray = (start, end) => Array(end - start + 1).fill(0).map((v, i) => i + start)
-document.onkeydown = function (event) {
+// var rangeArray = (start, end) => Array(end - start + 1).fill(0).map((v, i) => i + start)
+function keydown (event, mainp) {
   var e = event || window.event || arguments.callee.caller.arguments[0]
-
-  var [panelast, panenow] = getPane()
+  console.log(e.keyCode)
+  var [panelast,panenow] = mainp.getPane()
 
   var inputvalue = panenow.quicknav.children[0].value
   const inputEle = panenow.quicknav
@@ -92,12 +95,14 @@ document.onkeydown = function (event) {
     panenow.fileItems[cursorPosNow].scrollIntoViewIfNeeded()
   }
   // when "enter" pressed
-  else if (e && e.keyCode == 13) {
+  else if (e && e.keyCode === 13) {
+    console.log('enter')
     // should be optimize with dblckick function
     const i = panenow.key
     const filedir = panenow.dirs.now + panenow.fileItems[i].innerHTML
     if (panenow.fileList[3][i] == 'folder') {
       // open folder
+      console.log(panenow.fileList[3][i])
       panenow.showList(filedir + '/', i)
       // reset filter input and hide input box
       panenow.quicknav.children[0].value = ''
@@ -133,8 +138,8 @@ document.onkeydown = function (event) {
   }
 }
 
-function inputFilter () {
-  var [panelast, panenow] = getPane()
+function inputFilter(panenow) {
+  // var [panelast, panenow] = getPane()
 
   var inputvalue = panenow.quicknav.children[0].value
   if (!inputvalue) { // if empty, hide
@@ -152,13 +157,4 @@ function inputFilter () {
   }
 }
 
-function getPane () {
-  if (Pane.activepane == leftpane.whichPane) {
-    var panenow = leftpane
-    var panelast = rightpane
-  } else {
-    var panenow = rightpane
-    var panelast = leftpane
-  }
-  return [panelast, panenow]
-}
+module.exports = keydown

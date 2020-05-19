@@ -1,20 +1,24 @@
 // var fs = require("fs")
 
-var dirnow = ['C:/Users/', 'C:/'] // file dir for left and right pane.
+var dirnow = ['C:/', 'C:/'] // file dir for left and right pane.
 // var cursorPosition={"left":0, "right":0};   //the order number of file selected for each pane.
-
+var keydown = require('./shortcut')
 // var fm = require("./js/fman");
 var Pane = require('./js/pane')
+const mainpan = require('./js/mainpane')
+var mainp = new mainpan(dirnow)
+// var leftpane = new Pane('left', this.dirnow[0])
+// var rightpane = new Pane('right', this.dirnow[1])
 
 // var fmanleft = new fman("left");
 // var fmanright = new fman("right");
-var leftpane = new Pane('left', dirnow[0])
-var rightpane = new Pane('right', dirnow[1])
+// var leftpane = new Pane('left', dirnow[0])
+// var rightpane = new Pane('right', dirnow[1])
 
 // initial filelist after html loaded
 window.onload = function () {
-  leftpane.ini()
-  rightpane.ini()
+  mainp.creatpane()
+  // mainp.addpaneOnclick()
   // rightpane.inactive();
 }
 
@@ -24,10 +28,15 @@ window.onresize = function () {
 }
 
 // which pane is active
-window.onclick = function () {
-  if (Pane.activepane === leftpane.whichPane) {
-    rightpane.inactive()
-  } else {
-    leftpane.inactive()
-  }
+// window.onclick = function () {
+  // if (Pane.activepane === mainp.leftpane.whichPane) {
+  //   mainp.rightpane.inactive()
+  // } else {
+  //   mainp.leftpane.inactive()
+  // }
+// }
+
+document.onkeydown = function (event) {
+  // keydown(event, mainp)
+  mainp.addpaneOnclick()
 }

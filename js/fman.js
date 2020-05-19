@@ -1,12 +1,15 @@
-var pane = require('./pane')
-var exec = require('child_process').exec
-var activepane = 'left'
+// var pane = require('./pane')
+// var exec = require('child_process').exec
+
 class Fman {
-  constructor (whichPane, directory) {
+  constructor(whichPane, directory) {
+    this.activestate = 0
+    // this.activepane = ''
     this.whichPane = whichPane // "left" or "right"
-    this.dirs = new filedirs(directory) // file dir, .now, .before, record last dir
+    this.dirs = new Filedirs(directory) // file dir, .now, .before, record last dir
     this.key = 0 // position of cursor.
     this.dirEle = document.getElementById(whichPane + 'dir')
+    this.pane = document.getElementsByClassName(whichPane)[0]
     this.paneId = document.getElementById(whichPane + 'InfList')
     this.fileItems = document.getElementsByClassName('name' + whichPane)
     this.fileList = []
@@ -14,34 +17,40 @@ class Fman {
     this.activeColor = '#49483e'
     this.quicknav = document.getElementsByClassName('quicknav' + whichPane)[0]
   }
-
-  static get activepane () {
-    return activepane
+  // getter和setter是和类的属性绑定的特殊方法，分别会在其绑定的属性被取值、赋值时调用。
+  // 静态方法调用直接在类上进行，不能在类的实例上调用
+  get activepane () {
+    return this._activepane
   }
 
-  static set activepane (whichPane) {
-    activepane = whichPane
+  set activepane (whichPane) {
+    this._activepane = whichPane
   }
 
-  inactive () {
-    this.fileItems[this.key].parentNode.style.backgroundColor = this.unActiveColor
+  inactive(i) {
+    this.fileItems[i].parentNode.classList.remove('highlight')
+    // this.activestate = 0
   }
 
-  active () {
-    this.resetCursor(this.key)
-    activepane = this.whichPane
+  active(i) {
+    this.fileItems[i].parentNode.classList.add('highlight')
+
+    // this.activestate = 1
+    // this.resetCursor(this.key)
+    // this.activepane = this.whichPane
+
     // this.paneId.focus();
   }
 
-  refreshFolder () {
+  refreshFolder() {
     this.fileItems = document.getElementsByClassName('name' + this.whichPane)
   }
 
-  setDirHeader (dircectory) {
+  setDirHeader(dircectory) {
     this.dirEle.innerHTML = dircectory
   }
 
-  showFileList () {
+  showFileList() {
     // add file list in html
     var paneInnerText = ''
     var nameClassStr = ''
@@ -54,36 +63,58 @@ class Fman {
       nameClassStr = "<td class='name" + this.whichPane + "'>" + filename + '</td>'
       sizeStr = "<td class='size'>" + filesize + '</td>'
       dateStr = "<td class='date'>" + filedate + '</td>'
-      paneInnerText = paneInnerText + '<tr>' + nameClassStr + sizeStr + dateStr + '</tr>'
+
+      if(this.fileList[i].hide){
+        console.log(this.fileList[i].hide)
+        paneInnerText = paneInnerText + "<tr class = 'filelist hide'>" + nameClassStr + sizeStr + dateStr + '</tr>'
+      }
+      else{
+        paneInnerText = paneInnerText + "<tr class = 'filelist'>" + nameClassStr + sizeStr + dateStr + '</tr>'
+      }
+      
     }
+
     this.paneId.innerHTML = paneInnerText
   }
 
-  addOnclick () {
+  addOnclick(anotherPane) {
     // add onclick function on each file
     this.refreshFolder()
     for (let i = 0; i < this.fileItems.length; i++) {
-      this.fileItems[i].addEventListener('click', () => {
-        this.resetCursor(i)
+      this.fileItems[i].parentNode.addEventListener('click', () => {
         // this.clearOtherCursor()
         this.key = i
-        activepane = this.whichPane
+        // this.activepane = this.whichPane
+        this.resetCursor()
+        this.clearCursor(anotherPane)
       })
     }
   }
 
-  resetCursor (position) {
+
+  resetCursor() {
     // if position is number, hightlight the file selected,
     // if position="hide", none of file is hightlight
-    this.key = position
     this.refreshFolder()
     for (let i = 0; i < this.fileItems.length; i++) {
-      if (position === 'hideall') { var cursorColor = this.unActiveColor } else if (i != position) { var cursorColor = this.unActiveColor } else { var cursorColor = this.activeColor }
-      this.fileItems[i].parentNode.style.backgroundColor = cursorColor
+      this.fileList[i].formatDir()
+      if (this.key === 'hideall' || i != this.key) { 
+        this.inactive(i)
+      } 
+      else {
+        this.active(i)
+      }
+    }
+    // console.log(i + ' '+ cursorColor)
+  }
+
+  clearCursor(anotherPane){
+    for (let i = 0; i < anotherPane.fileItems.length; i++) {
+      anotherPane.inactive(i)
     }
   }
 
-  static resetWindowHeight () {
+  static resetWindowHeight() {
     const windowheight = document.documentElement.clientHeight
     const sectionelem = document.getElementsByTagName('section')
     document.getElementsByTagName('main')[0].style.height = windowheight.toString() + 'px'
@@ -92,14 +123,14 @@ class Fman {
   }
 }
 
-class filedirs {
-  constructor (directory) {
+class Filedirs {
+  constructor(directory) {
     this.before = directory
     this.now = directory
   }
 
-  set (directory) {
-    if (this.now != directory) {
+  set(directory) {
+    if (this.now !== directory) {
       this.before = this.now
       this.now = directory
     }

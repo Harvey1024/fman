@@ -2,17 +2,18 @@ var fs = require('fs')
 var Fman = require('./fman')
 var common = require('./common')
 var exec = require('child_process').exec;
+const hidefile = require('hidefile')
 
 class Pane extends Fman {
-//   constructor (whichPane, directory) {
-//     super(whichPane, directory)
-//   }
+  //   constructor (whichPane, directory) {
+  //     super(whichPane, directory)
+  //   }
 
-  ini () {
-    this.showList(this.dirs.now)
+  ini(anotherPane) {
+    this.showList(this.dirs.now,anotherPane)
   }
 
-  async showList (paneDir) {
+  async showList(paneDir, anotherPane) {
     // clear filelist
     this.fileList = []
     // read dircectory
@@ -27,68 +28,103 @@ class Pane extends Fman {
       // system files are not alowed get stats, then use try
       try {
         const stats = await fs.promises.stat(filedir)
+        var filedate = ''
+        var filesize = ''
+        var filetype = ''
         if (stats.isDirectory()) {
-          var filetype = 'folder'
-          var filedate = ''
-          var filesize = ''
+          filetype = 'folder'
+          filesize = '--'
         } else {
-          var filetype = 'file'
-          var filedate = common.dateFormat(stats.atime)
-          var filesize = common.fileSizeFormat(stats.size)
+          filetype = 'file'
+          filesize = common.fileSizeFormat(stats.size)
         }
-        this.fileList[k++] = new file(filedir, dirent, filetype, filesize, filedate)
+        filedate = common.dateFormat(stats.atime)
+        this.fileList[k] = new file(filedir, dirent, filetype, filesize, filedate)
+        this.fileList[k].formatDir()
+        this.ishidden(this.fileList[k])
+        k = k+1
       } catch (err) {
         console.error(err)
       }
+     
+
       // }
     }
+    // this.ishidden()
     this.showFileList()
-    this.dirs.set(paneDir)
-    this.setDirHeader(paneDir)
-    this.addOnclick()
-    this.addOndblclick()
-    this.resetCursor(0)
+    
+    // this.dirs.set(paneDir)
+    // this.setDirHeader(paneDir)
+    this.addOnclick(anotherPane)
+    this.addOndblclick(anotherPane)
+    // this.resetCursor(0)
   }
 
-  addOndblclick () {
+  ishidden(file){
+    hidefile.shouldBeHidden(file.dir, (err, result) => {
+      if (err == null) {
+        // console.log(result);  //-> true
+        if(result){
+          file.hide = 1
+        }
+        else{
+          file.hide = 0
+        }
+      }
+      else{        
+        console.log(err)
+      }
+    })
+
+    
+  }
+
+
+  addOndblclick(anotherPane) {
     this.refreshFolder()
     for (let i = 0; i < this.fileItems.length; i++) {
       this.fileItems[i].addEventListener('dblclick', () => {
         this.key = i
+        
         var filedir = this.fileList[i].dir
 
         if (this.fileList[i].type == 'folder') {
-          this.showList(filedir + '/', i)
+          this.showList(filedir + '/', anotherPane)
         } else {
           // if filename contain space, add "" for filename.
-          var splitFileDir = this.fileList[i].dir.split('/')
-          for (let j = 0; j < splitFileDir.length; j++) {
-            if (splitFileDir[j].indexOf(' ') != -1) { splitFileDir[j] = '"' + splitFileDir[j] + '"' }
-          }
-          splitFileDir[splitFileDir.length - 1] = '"' + this.fileList[i].name + '"'
-          var filedir = splitFileDir.join('/')
+          
           // if file, open file by default program of system
           // exec("start"+" "+filedir.toString());
-          exec(filedir)
+          exec( this.fileList[i].dir)
         }
       })
     }
   }
 
-  renameFile () {}
-  deletFile () {}
-  copyFile () {}
-  newfile () {}
-  newfolder () {}
+  renameFile() { }
+  deletFile() { }
+  copyFile() { }
+  newfile() { }
+  newfolder() { }
 }
 
 class file {
-  constructor (dir, name, type, size, atime) {
+  constructor(dir, name, type, size, atime) {
     this.dir = dir
     this.name = name
     this.type = type
     this.size = size
     this.atime = atime
+    this.hide = 0
+  }
+  formatDir(){
+    // if filename contain space, add "" for filename.
+    var splitFileDir = this.dir.split('/')
+    for (let j = 0; j < splitFileDir.length; j++) {
+      if (splitFileDir[j].indexOf(' ') != -1) { splitFileDir[j] = '"' + splitFileDir[j] + '"' }
+    }
+    // splitFileDir[splitFileDir.length - 1] = '"' + this.name + '"'
+    this.dir = splitFileDir.join('/')
   }
 }
 module.exports = Pane
