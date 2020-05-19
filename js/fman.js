@@ -125,15 +125,28 @@ class Fman {
 
 class Filedirs {
   constructor(directory) {
-    this.before = directory
+    this.previous = directory
     this.now = directory
+    this.parentDir = ''
   }
 
   set(directory) {
     if (this.now !== directory) {
-      this.before = this.now
+      this.previous = this.now
       this.now = directory
     }
+  }
+  getParentDir(){
+    var splitFileDir = this.now.split('/')
+    if(splitFileDir.slice(0,-2).length>=1){
+      this.parentDir = splitFileDir.slice(0,-2).join('/')+'/'
+      return this.parentDir
+    }
+    else{
+      this.parentDir = splitFileDir.slice(0,-1).join('/')+'/'
+      return this.parentDir
+    }
+    
   }
 }
 module.exports = Fman

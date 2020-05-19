@@ -35,8 +35,8 @@ window.onresize = function () {
   //   mainp.leftpane.inactive()
   // }
 // }
-
+kd = new keydown()
 document.onkeydown = function (event) {
-  // keydown(event, mainp)
-  mainp.addpaneOnclick()
+  // key event action
+  kd.ini(event, mainp)
 }

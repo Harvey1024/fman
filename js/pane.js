@@ -16,6 +16,7 @@ class Pane extends Fman {
   async showList(paneDir, anotherPane) {
     // clear filelist
     this.fileList = []
+    this.dirs.now =  paneDir
     // read dircectory
     const dir = await fs.promises.readdir(paneDir)
     var k = 0
@@ -40,7 +41,7 @@ class Pane extends Fman {
         }
         filedate = common.dateFormat(stats.atime)
         this.fileList[k] = new file(filedir, dirent, filetype, filesize, filedate)
-        this.fileList[k].formatDir()
+        this.fileList[k].formatDir()  //format dir if which contain space
         this.ishidden(this.fileList[k])
         k = k+1
       } catch (err) {
@@ -57,6 +58,7 @@ class Pane extends Fman {
     // this.setDirHeader(paneDir)
     this.addOnclick(anotherPane)
     this.addOndblclick(anotherPane)
+    
     // this.resetCursor(0)
   }
 
@@ -90,11 +92,10 @@ class Pane extends Fman {
 
         if (this.fileList[i].type == 'folder') {
           this.showList(filedir + '/', anotherPane)
-        } else {
-          // if filename contain space, add "" for filename.
-          
-          // if file, open file by default program of system
-          // exec("start"+" "+filedir.toString());
+          // refresh dir
+          this.dirs.now = filedir + '/'
+        } 
+        else {
           exec( this.fileList[i].dir)
         }
       })

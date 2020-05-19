@@ -6,10 +6,41 @@ var exec = require('child_process').exec
 // var visblekey = 0
 var filterbegin = 0
 // var rangeArray = (start, end) => Array(end - start + 1).fill(0).map((v, i) => i + start)
-function keydown (event, mainp) {
+class keydown {
+  construstor() {
+    this.e = ''
+    this.inputvalue = ''
+    this.mainp = ''
+  }
+  ini(event, mainp) {
+    
+    this.mainp = mainp
+    this.e = event || window.event || arguments.callee.caller.arguments[0]
+    this.inputvalue = mainp.activepane.quicknav.children[0].value
+    //backspace
+    if (this.press('backspace')) {
+      // back to previous dir
+      this.backDir(mainp.activepane, mainp.getinactivpane())
+    }
+    
+  }
+  backDir(pane, anotherpane) {
+    var parentDir = pane.dirs.getParentDir()
+    pane.showList(parentDir, anotherpane)
+  }
+  press(keyWord) {
+    if (keyWord == 'backspace') {
+      return this.e && this.e.keyCode == 8 && this.inputvalue == ''
+    }
+  }
+
+}
+
+function keydown2(event, mainp) {
   var e = event || window.event || arguments.callee.caller.arguments[0]
   console.log(e.keyCode)
-  var [panelast,panenow] = mainp.getPane()
+
+  var panenow = mainp.activepane
 
   var inputvalue = panenow.quicknav.children[0].value
   const inputEle = panenow.quicknav

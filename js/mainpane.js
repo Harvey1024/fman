@@ -4,8 +4,9 @@ class mianpane {
     this.dirnow = dirini
     this.leftpane = ''
     this.rightpane = ''
-    this.panes = []
+    this.panes = []   //[leftpane, rightpane]
     this.activepane = ''
+    this.inactivpane = ''
     
   }
 
@@ -19,25 +20,23 @@ class mianpane {
     this.panes = [this.leftpane, this.rightpane]
   }
 
-
-  getPane () {
-    var panenow = this.leftpane
-    var panelast = this.rightpane
-    if (this.leftpane.whichPane) {
-      panenow = this.leftpane
-      panelast = this.rightpane
-    } else {
-      panenow = this.rightpane
-      panelast = this.leftpane
+  getinactivpane(){
+    if(this.activepane == this.panes[0]){
+      this.inactivpane = this.panes[1]
     }
-    return [panelast, panenow]
+    else{
+      this.inactivpane = this.panes[0]
+    }
+    return this.inactivpane
   }
 
   addpaneOnclick(pane) {
     pane.pane.addEventListener('click', ()=>{
-      this.activepane = pane        
+        this.activepane = pane
     })
   }
+  
+
 }
 
 module.exports = mianpane
