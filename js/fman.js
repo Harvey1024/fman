@@ -16,6 +16,8 @@ class Fman {
     this.unActiveColor = '#272822'
     this.activeColor = '#49483e'
     this.quicknav = document.getElementsByClassName('quicknav' + whichPane)[0]
+    this.anotherPane = ''
+    this.visibleFileList = []
   }
   // getter和setter是和类的属性绑定的特殊方法，分别会在其绑定的属性被取值、赋值时调用。
   // 静态方法调用直接在类上进行，不能在类的实例上调用
@@ -77,7 +79,7 @@ class Fman {
     this.paneId.innerHTML = paneInnerText
   }
 
-  addOnclick(anotherPane) {
+  addOnclick() {
     // add onclick function on each file
     this.refreshFolder()
     for (let i = 0; i < this.fileItems.length; i++) {
@@ -85,27 +87,22 @@ class Fman {
         // this.clearOtherCursor()
         this.key = i
         // this.activepane = this.whichPane
-        this.resetCursor()
-        this.clearCursor(anotherPane)
+        this.resetCursor(i)
+        // this.active(i)
+        this.clearCursor(this.anotherPane)
       })
     }
   }
 
 
-  resetCursor() {
+  resetCursor(i) {
     // if position is number, hightlight the file selected,
     // if position="hide", none of file is hightlight
+    this.clearCursor(this)
     this.refreshFolder()
-    for (let i = 0; i < this.fileItems.length; i++) {
-      // this.fileList[i].formatDir()
-      if (this.key === 'hideall' || i != this.key) { 
-        this.inactive(i)
-      } 
-      else {
-        this.active(i)
-      }
-    }
-    // console.log(i + ' '+ cursorColor)
+    this.active(i)
+    this.key = i
+
   }
 
   clearCursor(anotherPane){

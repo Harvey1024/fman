@@ -18,14 +18,15 @@ function fileSizeFormat (size) {
 
 // file filter
 function fileFilter (panenow, str, files) {
+  // clear highlight
+  // panenow.resetCursor()
   var visibleFileList = []
   for (let i = 0; i <= files.length - 1; i++) {
     panenow.fileItems[i].parentNode.classList.remove('hide')
   }
   for (let i = 0, k = 0; i <= files.length - 1; i++) {
-    var filename = files[i]
-    visibleFileList[k] = i
-    k++
+    var filename = files[i].name
+    
     // for(let j=0; j<str.length-1;j++){
 
     //     if(filename.toUpperCase().indexOf(str[j])==-1){
@@ -36,15 +37,24 @@ function fileFilter (panenow, str, files) {
 
     // }
     if (filename.toUpperCase().indexOf(str.toUpperCase()) == -1) {
-      panenow.fileItems[i].parentNode.classList.add('hide')
+      panenow.fileItems[i].parentNode.classList.add('hide')   
+      
     }
+    else{
+      visibleFileList[k] = i
+      k++
+    }
+    
   }
+  // panenow.active(visibleFileList[0])
+
   const rangeArray = (start, end) => Array(end - start + 1).fill(0).map((v, i) => i + start)
   if (!str) {
-    return rangeArray(0, panenow.fileList[0].length - 1)
+    return rangeArray(0, panenow.fileList.length - 1)
   }
-  // console.log(visibleFileList)
-  return visibleFileList
+  console.log(visibleFileList)
+  panenow.visibleFileList= visibleFileList
+  return visibleFileList[0]
 }
 function hello () {
   console.log('hello')

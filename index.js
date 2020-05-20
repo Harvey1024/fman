@@ -3,6 +3,7 @@
 var dirnow = ['C:/', 'C:/'] // file dir for left and right pane.
 // var cursorPosition={"left":0, "right":0};   //the order number of file selected for each pane.
 var keydown = require('./shortcut')
+// var inputFilter = require('./shortcut')
 // var fm = require("./js/fman");
 var Pane = require('./js/pane')
 const mainpan = require('./js/mainpane')
@@ -18,6 +19,7 @@ var mainp = new mainpan(dirnow)
 // initial filelist after html loaded
 window.onload = function () {
   mainp.creatpane()
+  mainp.activepane = mainp.leftpane
   // mainp.addpaneOnclick()
   // rightpane.inactive();
 }
@@ -39,4 +41,8 @@ kd = new keydown()
 document.onkeydown = function (event) {
   // key event action
   kd.ini(event, mainp)
+}
+
+function filter(){
+  kd.filter(mainp.activepane)
 }

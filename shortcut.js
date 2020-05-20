@@ -13,28 +13,112 @@ class keydown {
     this.mainp = ''
   }
   ini(event, mainp) {
-    
+
     this.mainp = mainp
     this.e = event || window.event || arguments.callee.caller.arguments[0]
     this.inputvalue = mainp.activepane.quicknav.children[0].value
+
     //backspace
     if (this.press('backspace')) {
       // back to previous dir
+      if (this.inputvalue == '') {
+
+        mainp.activepane.quicknav.classList.add('hide')
+      }
       this.backDir(mainp.activepane, mainp.getinactivpane())
     }
-    
+    if (this.press('sortfiles')) {
+      this.sortfiles(mainp.activepane)
+    }
+    if (this.press('esc')) {
+      this.exit()
+    }
+    if (this.e.key == 'Enter') {
+      this.mainp.activepane.openFileOrFolder()
+    }
+    if (this.e.key == 'ArrowUp') {
+      this.arrowUporDown('up')
+    }
+    if(this.e.key == 'ArrowDown'){
+      this.arrowUporDown('down')
+    }
   }
   backDir(pane, anotherpane) {
     var parentDir = pane.dirs.getParentDir()
-    pane.showList(parentDir, anotherpane)
+    pane.showList(parentDir, anotherpane, 1)
   }
   press(keyWord) {
     if (keyWord == 'backspace') {
-      return this.e && this.e.keyCode == 8 && this.inputvalue == ''
+      return this.e && this.e.key == 'Backspace' && this.inputvalue == ''
+    }
+    if (keyWord == 'sortfiles') {
+      var KeyCanBeSorted = 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890.,-=+'
+      return this.e && KeyCanBeSorted.indexOf(this.e.key) != -1
+    }
+    if (keyWord == 'esc') {
+      return this.e && this.e.key == 'Escape'
+      console.log('esc')
     }
   }
+  sortfiles(panenow) {
+    panenow.quicknav.classList.remove('hide')
+    panenow.quicknav.children[0].focus()
+    this.inputvalue = panenow.quicknav.children[0].value
+  }
+  filter(panenow) {
+    this.inputvalue = panenow.quicknav.children[0].value
+    console.log(this.inputvalue)
+    if (!this.inputvalue) { // if empty, hide
+      panenow.quicknav.classList.add('hide')
+    }
+    // show files which include string input. and highlight first one.
+    var firstfile = cm.fileFilter(panenow, this.inputvalue, panenow.fileList)
+    // clear highlight all
+    panenow.clearCursor(panenow)
+    // highlight fist file
+    panenow.active(firstfile)
+    // set panenow key
+    panenow.key = firstfile
+  }
+  removeHideAll(panenow) {
+    for (let i = 0; i <= panenow.fileItems.length - 1; i++) {
+      panenow.fileItems[i].parentNode.classList.remove('hide')
+    }
+  }
+  exit() {
+    console.log('exit')
+    this.removeHideAll(this.mainp.activepane)
+    this.mainp.activepane.quicknav.children[0].value = ''
+    this.mainp.activepane.quicknav.classList.add('hide')
+  }
+  openFileOrFolder() {
+    this.mainp.activepane.openFileOrFolder()
+  }
+  arrowUporDown(arrow) {
+    var panenow = this.mainp.activepane
+    this.e.preventDefault() // prevent previeous scroll event
+    var cursorPosNow = 0
+    if(arrow == 'up')
+    {
+      cursorPosNow = panenow.key - 1
+    }
+    else if(arrow == 'down')
+    {
+      cursorPosNow = panenow.key + 1
+    }
 
+    if(cursorPosNow<0 || cursorPosNow>=panenow.fileList.length) {
+      cursorPosNow = panenow.key
+    }
+
+    console.log(cursorPosNow)
+   
+  panenow.fileItems[cursorPosNow].click()
+  panenow.fileItems[cursorPosNow].scrollIntoViewIfNeeded()
 }
+}
+
+
 
 function keydown2(event, mainp) {
   var e = event || window.event || arguments.callee.caller.arguments[0]
@@ -171,13 +255,14 @@ function keydown2(event, mainp) {
 
 function inputFilter(panenow) {
   // var [panelast, panenow] = getPane()
-
+  // get input box value
   var inputvalue = panenow.quicknav.children[0].value
+  console.log(inputvalue)
   if (!inputvalue) { // if empty, hide
     panenow.quicknav.classList.add('hide')
   }
   // show files which include string input.
-  cm.fileFilter(panenow, inputvalue, panenow.fileList[0])
+  cm.fileFilter(panenow, inputvalue, panenow.fileList)
 
   // move cursor to first file visible
   for (let i = 0; i < panenow.fileItems.length; i++) {
@@ -187,5 +272,6 @@ function inputFilter(panenow) {
     }
   }
 }
+
 
 module.exports = keydown
