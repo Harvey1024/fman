@@ -39,7 +39,7 @@ class keydown {
     if (this.e.key == 'ArrowUp') {
       this.arrowUporDown('up')
     }
-    if(this.e.key == 'ArrowDown'){
+    if (this.e.key == 'ArrowDown') {
       this.arrowUporDown('down')
     }
   }
@@ -98,24 +98,41 @@ class keydown {
     var panenow = this.mainp.activepane
     this.e.preventDefault() // prevent previeous scroll event
     var cursorPosNow = 0
-    if(arrow == 'up')
-    {
-      cursorPosNow = panenow.key - 1
+    if (!this.inputvalue) {
+      if (arrow == 'up') {
+        cursorPosNow = panenow.key - 1
+      }
+      else if (arrow == 'down') {
+        cursorPosNow = panenow.key + 1
+      }
+      if (cursorPosNow < 0 || cursorPosNow >= panenow.fileList.length) {
+        cursorPosNow = panenow.key
+      }
     }
-    else if(arrow == 'down')
-    {
-      cursorPosNow = panenow.key + 1
-    }
+    else {
+      var visibleFileList = this.mainp.activepane.visibleFileList
+      if (arrow == 'up') {
+        var visblePo = visibleFileList.indexOf(panenow.key) - 1
+        if (visblePo >= 0)
+          cursorPosNow = visibleFileList[visblePo]
+        else
+          cursorPosNow = panenow.key
+      }
+      else if (arrow == 'down') {
+        var visblePo = visibleFileList.indexOf(panenow.key) + 1
+        if (visblePo <= visibleFileList.length - 1)
+          cursorPosNow = visibleFileList[visblePo]
+        else
+          cursorPosNow = panenow.key
+      }
 
-    if(cursorPosNow<0 || cursorPosNow>=panenow.fileList.length) {
-      cursorPosNow = panenow.key
     }
 
     console.log(cursorPosNow)
-   
-  panenow.fileItems[cursorPosNow].click()
-  panenow.fileItems[cursorPosNow].scrollIntoViewIfNeeded()
-}
+
+    panenow.fileItems[cursorPosNow].click()
+    panenow.fileItems[cursorPosNow].scrollIntoViewIfNeeded()
+  }
 }
 
 
