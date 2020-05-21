@@ -99,7 +99,8 @@ header table{
     overflow: hidden; 
     word-break:break-all;
 }
-.filelist:hover,.tableheader:hover{
+/* .filelist:hover,. */
+tableheader:hover{
     background-color: #49483e;
     cursor: default;
 }

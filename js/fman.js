@@ -95,7 +95,7 @@ class Fman {
   }
 
 
-  resetCursor(i) {
+  resetCursor(i=this.key) {
     // if position is number, hightlight the file selected,
     // if position="hide", none of file is hightlight
     this.clearCursor(this)

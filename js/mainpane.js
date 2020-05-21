@@ -13,11 +13,12 @@ class mianpane {
   creatpane () {
     this.leftpane = new Pane('left', this.dirnow[0])
     this.rightpane = new Pane('right', this.dirnow[1])
-    this.leftpane.ini(this.rightpane)
-    this.rightpane.ini(this.leftpane)
+    this.leftpane.ini(this.rightpane,1)
+    this.rightpane.ini(this.leftpane,0)
     this.addpaneOnclick(this.leftpane)
     this.addpaneOnclick(this.rightpane)
     this.panes = [this.leftpane, this.rightpane]
+    this.activepane = this.leftpane
   }
 
   getinactivpane(){

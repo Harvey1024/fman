@@ -34,6 +34,7 @@ class keydown {
       this.exit()
     }
     if (this.e.key == 'Enter') {
+      this.exit()
       this.mainp.activepane.openFileOrFolder()
     }
     if (this.e.key == 'ArrowUp') {
@@ -41,6 +42,9 @@ class keydown {
     }
     if (this.e.key == 'ArrowDown') {
       this.arrowUporDown('down')
+    }
+    if (this.e.key == 'Tab') {
+      this.activeAnother()
     }
   }
   backDir(pane, anotherpane) {
@@ -110,6 +114,7 @@ class keydown {
       }
     }
     else {
+      // if the files is filtered
       var visibleFileList = this.mainp.activepane.visibleFileList
       if (arrow == 'up') {
         var visblePo = visibleFileList.indexOf(panenow.key) - 1
@@ -127,11 +132,21 @@ class keydown {
       }
 
     }
-
-    console.log(cursorPosNow)
-
     panenow.fileItems[cursorPosNow].click()
     panenow.fileItems[cursorPosNow].scrollIntoViewIfNeeded()
+  }
+  activeAnother() {
+    var anotherpane = ''
+    var panenow  = this.mainp.activepane
+    if (this.mainp.activepane == this.mainp.panes[0])
+      anotherpane = this.mainp.panes[1]
+    else
+      anotherpane = this.mainp.panes[0]
+
+    this.mainp.activepane = anotherpane
+    panenow = anotherpane
+    panenow.fileItems[panenow.key].click()
+    // this.mainp.activepane.resetCursor()
   }
 }
 
