@@ -1,6 +1,7 @@
 // var fs = require("fs")
 
 var dirnow = ['C:/', 'C:/'] // file dir for left and right pane.
+const qcmd = require('./js/quickcmd')
 // var cursorPosition={"left":0, "right":0};   //the order number of file selected for each pane.
 var keydown = require('./shortcut')
 // var inputFilter = require('./shortcut')
@@ -17,9 +18,12 @@ var mainp = new mainpan(dirnow)
 // var rightpane = new Pane('right', dirnow[1])
 
 // initial filelist after html loaded
+var dirlog = new qcmd.dirSumList()
 window.onload = function () {
   mainp.creatpane()
   mainp.activepane = mainp.leftpane
+
+  dirlog.readDirs()
   // mainp.addpaneOnclick()
   // rightpane.inactive();
 }
@@ -45,4 +49,8 @@ document.onkeydown = function (event) {
 
 function filter(){
   kd.filter(mainp.activepane)
+}
+
+window.onclose = function () {
+  dirlog.writDirs()
 }

@@ -1,4 +1,5 @@
 var cm = require('./js/common')
+const fs = require('fs')
 var exec = require('child_process').exec
 // var pane = require('./pane')
 // var mianpane = require('./js/mainpane')
@@ -17,7 +18,7 @@ class keydown {
     this.mainp = mainp
     this.e = event || window.event || arguments.callee.caller.arguments[0]
     this.inputvalue = mainp.activepane.quicknav.children[0].value
-
+    this.quickcmd = document.getElementsByClassName('quickcmd')[0]
     //backspace
     if (this.press('backspace')) {
       // back to previous dir
@@ -27,16 +28,14 @@ class keydown {
       }
       this.backDir(mainp.activepane, mainp.getinactivpane())
     }
-    if (this.press('sortfiles')) {
-      this.sortfiles(mainp.activepane)
-    }
+
     if (this.press('esc')) {
       this.exit()
     }
     if (this.e.key == 'Enter') {
       this.exit()
       this.mainp.activepane.openFileOrFolder()
-    }
+    }   
     if (this.e.key == 'ArrowUp') {
       this.arrowUporDown('up')
     }
@@ -46,6 +45,39 @@ class keydown {
     if (this.e.key == 'Tab') {
       this.activeAnother()
     }
+    if (this.press('sortfiles') && !this.e.ctrlKey && this.quickCmdisHide()) {
+      this.sortfiles(mainp.activepane)
+    }
+    // ctr + P
+    if (this.e.ctrlKey && this.e.code == 'KeyP' && !this.e.shiftKey) {
+      this.showQuickCmd()
+      this.quickDir()
+    }
+    // ctr + shift + p
+    if (this.e.ctrlKey && this.e.code == 'KeyP' && this.e.shiftKey) {
+      this.showQuickCmd()
+      this.quickCommand()
+    }
+
+  }
+  quickCmdisHide() {
+    if (this.quickcmd.classList.length == 2)
+      return 1 //hide
+    else
+      return 0 // not hide
+  }
+  quickDir() {
+    //read dirlog file
+    console.log('hello')
+
+
+  }
+  quickCommand() {
+
+  }
+  showQuickCmd() {
+    this.quickcmd.classList.remove('hide')
+    document.getElementsByClassName('cmdheader')[0].children[0].focus()
   }
   backDir(pane, anotherpane) {
     var parentDir = pane.dirs.getParentDir()
@@ -94,6 +126,8 @@ class keydown {
     this.removeHideAll(this.mainp.activepane)
     this.mainp.activepane.quicknav.children[0].value = ''
     this.mainp.activepane.quicknav.classList.add('hide')
+
+    this.quickcmd.classList.add('hide')
   }
   openFileOrFolder() {
     this.mainp.activepane.openFileOrFolder()
@@ -137,7 +171,7 @@ class keydown {
   }
   activeAnother() {
     var anotherpane = ''
-    var panenow  = this.mainp.activepane
+    var panenow = this.mainp.activepane
     if (this.mainp.activepane == this.mainp.panes[0])
       anotherpane = this.mainp.panes[1]
     else
@@ -304,6 +338,5 @@ function inputFilter(panenow) {
     }
   }
 }
-
 
 module.exports = keydown
