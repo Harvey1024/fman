@@ -29,7 +29,7 @@ class keydown {
       if (this.quickCmdisHide()) {
         if (this.inputvalue == '')
           mainp.activepane.quicknav.classList.add('hide')
-        this.backDir(mainp.activepane, mainp.getinactivpane())
+        this.backDir(mainp.activepane, mainp.inactivpane)
       }
       else {
 

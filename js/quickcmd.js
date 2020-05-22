@@ -36,6 +36,28 @@ class quickcmd {
     if (transCmd[0] == 'delet') {
       this.delet()
     }
+    //copy file
+    if (transCmd[0] == 'copy') {
+      this.copy()
+    }
+  }
+  copy() {
+    var key = this.mainp.activepane.key
+    var file = this.mainp.activepane.fileList[key]
+    var filedir = file.dir
+    var target = this.mainp.inactivepane.dirs.now + file.name
+    if (file.isfile) {
+      console.log('target')
+      fs.copyFile(filedir, target, (err) => {
+        if (err)
+          throw err
+        else
+          console.log('copy')
+        this.mainp.activepane = this.mainp.inactivepane
+        this.refreshDir()
+      })
+    }
+
   }
   delet() {
     var key = this.mainp.activepane.key
@@ -87,6 +109,7 @@ class quickcmd {
   refreshDir() {
     var dirNow = this.mainp.activepane.dirs.now
     this.mainp.activepane.showList(dirNow, 1)
+
   }
   newfolder_next(index, paths) {
     if (index > paths.length)
