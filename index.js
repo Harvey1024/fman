@@ -1,6 +1,6 @@
 // var fs = require("fs")
 
-var dirnow = ['C:/', 'C:/'] // file dir for left and right pane.
+var dirnow = ['C:/', 'C:/users/harvey/onedrive/n2n/'] // file dir for left and right pane.
 const qcmd = require('./js/quickcmd')
 // var cursorPosition={"left":0, "right":0};   //the order number of file selected for each pane.
 var keydown = require('./shortcut')
@@ -54,3 +54,6 @@ function filter(){
 window.onclose = function () {
   dirlog.writDirs()
 }
+
+// k2 = new qcmd.quickcmd('new folder')
+// k2.newfolder('c:/users/harvey/onedrive/n2n')

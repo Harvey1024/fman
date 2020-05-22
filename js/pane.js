@@ -15,6 +15,7 @@ class Pane extends Fman {
   }
 
   async showList(paneDir, isActive) {
+     console.log('showlist')
     // clear filelist
     this.fileList = []
     // refersh dirs
@@ -99,6 +100,10 @@ class Pane extends Fman {
   }
   openFileOrFolder() {
     var i = this.key
+    //if folder is empty, do nothing
+    if(this.fileList.length==0)
+      return
+
     // for fs, the dir needn't add "", but for exec, the dir should add "" for which include space.
     if (this.fileList[i].type == 'folder') {
       this.showList(this.fileList[i].dir + '/', 1)
@@ -134,8 +139,13 @@ class file {
       if (splitFileDir[j].indexOf(' ') != -1) { splitFileDir[j] = '"' + splitFileDir[j] + '"' }
     }
     // splitFileDir[splitFileDir.length - 1] = '"' + this.name + '"'
-    console.log(splitFileDir.join('/'))
+    // console.log(splitFileDir.join('/'))
     return splitFileDir.join('/')
+  }
+  folder(){
+    var filedirlist = this.dir.split('/')
+    if(filedirlist.length>=2)
+      return filedirlist.slice(0,filedirlist.length-1).join('/')
   }
 }
 module.exports = Pane

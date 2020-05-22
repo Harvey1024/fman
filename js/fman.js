@@ -135,14 +135,28 @@ class Filedirs {
   }
   getParentDir(){
     var splitFileDir = this.now.split('/')
-    if(splitFileDir.slice(0,-2).length>=1){
-      this.parentDir = splitFileDir.slice(0,-2).join('/')+'/'
-      return this.parentDir
+    console.log(splitFileDir)
+    var sdir = []
+    for(var dir in splitFileDir){
+      console.log(splitFileDir[dir])
+      if(splitFileDir[dir]=='')
+        break
+      sdir.push(splitFileDir[dir])
     }
-    else{
-      this.parentDir = splitFileDir.slice(0,-1).join('/')+'/'
+    splitFileDir = sdir
+    console.log(splitFileDir)
+    // if(splitFileDir.slice(0,-2).length>=1){
+    //   this.parentDir = splitFileDir.slice(0,-2).join('/')+'/'
+    //   return this.parentDir
+    // }
+    // else{
+    //   this.parentDir = splitFileDir.slice(0,-1).join('/')+'/'
+    //   return this.parentDir
+    // }
+    if(splitFileDir.length==1)
+      return this.now
+    this.parentDir = splitFileDir.slice(0,-1).join('/')+'/'
       return this.parentDir
-    }
     
   }
 }

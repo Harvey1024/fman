@@ -1,5 +1,6 @@
 var cm = require('./js/common')
 const fs = require('fs')
+const qcmd = require('./js/quickcmd')
 var exec = require('child_process').exec
 // var pane = require('./pane')
 // var mianpane = require('./js/mainpane')
@@ -12,6 +13,8 @@ class keydown {
     this.e = ''
     this.inputvalue = ''
     this.mainp = ''
+    this.quickcmd = ''
+    this.qcmd = ''
   }
   ini(event, mainp) {
 
@@ -19,23 +22,37 @@ class keydown {
     this.e = event || window.event || arguments.callee.caller.arguments[0]
     this.inputvalue = mainp.activepane.quicknav.children[0].value
     this.quickcmd = document.getElementsByClassName('quickcmd')[0]
+    this.qcmd = new qcmd.quickcmd()
     //backspace
     if (this.press('backspace')) {
-      // back to previous dir
-      if (this.inputvalue == '') {
-
-        mainp.activepane.quicknav.classList.add('hide')
+      // if quickcmd is hide, back to previous dir
+      if (this.quickCmdisHide()) {
+        if (this.inputvalue == '')
+          mainp.activepane.quicknav.classList.add('hide')
+        this.backDir(mainp.activepane, mainp.getinactivpane())
       }
-      this.backDir(mainp.activepane, mainp.getinactivpane())
+      else {
+
+      }
+
     }
 
     if (this.press('esc')) {
       this.exit()
     }
     if (this.e.key == 'Enter') {
+
+      // if quickcmd is hide, open file or folder
+      if (this.quickCmdisHide()) {
+        this.mainp.activepane.openFileOrFolder()
+      }
+      else {
+        console.log('cmd')
+        // if quickcmd is active, run
+        this.runQcmd()
+      }
       this.exit()
-      this.mainp.activepane.openFileOrFolder()
-    }   
+    }
     if (this.e.key == 'ArrowUp') {
       this.arrowUporDown('up')
     }
@@ -59,6 +76,15 @@ class keydown {
       this.quickCommand()
     }
 
+  }
+  runQcmd() {
+    var cmdinput = document.getElementById('quickCmdInput').value
+    var activeKey = this.mainp.activepane.key
+    var selectedFile = this.mainp.activepane.fileList[activeKey]
+    var dirNow = this.mainp.activepane.dirs.now
+    this.qcmd.run(cmdinput, this.mainp, dirNow, selectedFile)
+    // clear input content.
+    document.getElementById('quickCmdInput').value = ''
   }
   quickCmdisHide() {
     if (this.quickcmd.classList.length == 2)
@@ -127,7 +153,9 @@ class keydown {
     this.mainp.activepane.quicknav.children[0].value = ''
     this.mainp.activepane.quicknav.classList.add('hide')
 
+    //hide quickcmd box and clear content.
     this.quickcmd.classList.add('hide')
+    document.getElementById('quickCmdInput').value = ''
   }
   openFileOrFolder() {
     this.mainp.activepane.openFileOrFolder()
@@ -178,8 +206,12 @@ class keydown {
       anotherpane = this.mainp.panes[0]
 
     this.mainp.activepane = anotherpane
-    panenow = anotherpane
-    panenow.fileItems[panenow.key].click()
+
+    if (panenow.fileList.length == 0) {
+      panenow.inactive(panenow.key)
+    }
+    else
+      anotherpane.fileItems[panenow.key].click()
     // this.mainp.activepane.resetCursor()
   }
 }
