@@ -23,25 +23,54 @@ class quickcmd {
     var transCmd = this.cmd.split(' ')
 
     //creat new folder
-    if (transCmd[0]=='mkdir') {
-      var newfoldername = [folder,transCmd[1]].join('/')
+    if (transCmd[0] == 'mkdir') {
+      var newfoldername = [folder, transCmd[1]].join('/')
       this.newfolder(newfoldername)
     }
     //creat new file
-    if (transCmd[0]=='newfile') {
-      var newfilePath = [folder,transCmd[1]].join('/')
+    if (transCmd[0] == 'newfile') {
+      var newfilePath = [folder, transCmd[1]].join('/')
       this.newfile(newfilePath)
     }
+    //delet file or folder
+    if (transCmd[0] == 'delet') {
+      this.delet()
+    }
   }
-  newfile(newfilePath){
-    fs.open(newfilePath,'wx',(err,fd)=>{
-      if(err){
+  delet() {
+    var key = this.mainp.activepane.key
+    var filedir = this.mainp.activepane.fileList[key].dir
+    //delet file
+    if (this.mainp.activepane.fileList[key].isfile) {
+      fs.unlink(filedir, (err) => {
+        if (err)
+          throw err
+        else
+          console.log('file: ' + filedir + ' deleted')
+        this.refreshDir()
+      })
+    }
+    else {
+      //delet folder
+      fs.rmdir(filedir, (err) => {
+        if (err)
+          throw err
+        else
+          console.log('folder: ' + filedir + ' deleted')
+        this.refreshDir()
+      })
+    }
+
+  }
+  newfile(newfilePath) {
+    fs.open(newfilePath, 'wx', (err, fd) => {
+      if (err) {
         // file that need to be created exist.
         console.err(err)
       }
-      else{
+      else {
         this.refreshDir()
-        fs.close(fd,(err)=>{
+        fs.close(fd, (err) => {
           // console.log('file closed')
         })
       }
@@ -53,11 +82,11 @@ class quickcmd {
     let paths = dir.split('/')
     console.log(paths)
     let index = 1;
-    this.newfolder_next(index, paths)    
+    this.newfolder_next(index, paths)
   }
-  refreshDir(){
+  refreshDir() {
     var dirNow = this.mainp.activepane.dirs.now
-    this.mainp.activepane.showList(dirNow,1)
+    this.mainp.activepane.showList(dirNow, 1)
   }
   newfolder_next(index, paths) {
     if (index > paths.length)

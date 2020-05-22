@@ -21,27 +21,20 @@ class Fman {
   }
   // getter和setter是和类的属性绑定的特殊方法，分别会在其绑定的属性被取值、赋值时调用。
   // 静态方法调用直接在类上进行，不能在类的实例上调用
-  get activepane () {
+  get activepane() {
     return this._activepane
   }
 
-  set activepane (whichPane) {
+  set activepane(whichPane) {
     this._activepane = whichPane
   }
 
   inactive(i) {
     this.fileItems[i].parentNode.classList.remove('highlight')
-    // this.activestate = 0
   }
 
   active(i) {
     this.fileItems[i].parentNode.classList.add('highlight')
-
-    // this.activestate = 1
-    // this.resetCursor(this.key)
-    // this.activepane = this.whichPane
-
-    // this.paneId.focus();
   }
 
   refreshFolder() {
@@ -66,14 +59,14 @@ class Fman {
       sizeStr = "<td class='size'>" + filesize + '</td>'
       dateStr = "<td class='date'>" + filedate + '</td>'
 
-      if(this.fileList[i].hide){
+      if (this.fileList[i].hide) {
         console.log(this.fileList[i].hide)
         paneInnerText = paneInnerText + "<tr class = 'filelist hide'>" + nameClassStr + sizeStr + dateStr + '</tr>'
       }
-      else{
+      else {
         paneInnerText = paneInnerText + "<tr class = 'filelist'>" + nameClassStr + sizeStr + dateStr + '</tr>'
       }
-      
+
     }
 
     this.paneId.innerHTML = paneInnerText
@@ -95,7 +88,7 @@ class Fman {
   }
 
 
-  resetCursor(i=this.key) {
+  resetCursor(i = this.key) {
     // if position is number, hightlight the file selected,
     // if position="hide", none of file is hightlight
     this.clearCursor(this)
@@ -105,7 +98,7 @@ class Fman {
 
   }
 
-  clearCursor(anotherPane){
+  clearCursor(anotherPane) {
     for (let i = 0; i < anotherPane.fileItems.length; i++) {
       anotherPane.inactive(i)
     }
@@ -133,13 +126,13 @@ class Filedirs {
       this.now = directory
     }
   }
-  getParentDir(){
+  getParentDir() {
     var splitFileDir = this.now.split('/')
     console.log(splitFileDir)
     var sdir = []
-    for(var dir in splitFileDir){
+    for (var dir in splitFileDir) {
       console.log(splitFileDir[dir])
-      if(splitFileDir[dir]=='')
+      if (splitFileDir[dir] == '')
         break
       sdir.push(splitFileDir[dir])
     }
@@ -153,11 +146,11 @@ class Filedirs {
     //   this.parentDir = splitFileDir.slice(0,-1).join('/')+'/'
     //   return this.parentDir
     // }
-    if(splitFileDir.length==1)
+    if (splitFileDir.length == 1)
       return this.now
-    this.parentDir = splitFileDir.slice(0,-1).join('/')+'/'
-      return this.parentDir
-    
+    this.parentDir = splitFileDir.slice(0, -1).join('/') + '/'
+    return this.parentDir
+
   }
 }
 module.exports = Fman

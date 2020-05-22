@@ -1,21 +1,105 @@
 var fs = require('fs')
-var Fman = require('./fman')
+// var Fman = require('./fman')
 var common = require('./common')
 var exec = require('child_process').exec;
 const hidefile = require('hidefile')
 
-class Pane extends Fman {
-  //   constructor (whichPane, directory) {
-  //     super(whichPane, directory)
-  //   }
+class Pane {
+  constructor(whichPane, directory) {
+    this.activestate = 0
+    // this.activepane = ''
+    this.whichPane = whichPane // "left" or "right"
+    this.dirs = new Filedirs(directory) // file dir, .now, .before, record last dir
+    this.key = 0 // position of cursor.
+    this.dirEle = document.getElementById(whichPane + 'dir')
+    this.pane = document.getElementsByClassName(whichPane)[0]
+    this.paneId = document.getElementById(whichPane + 'InfList')
+    this.fileItems = document.getElementsByClassName('name' + whichPane)
+    this.fileList = []
+    this.unActiveColor = '#272822'
+    this.activeColor = '#49483e'
+    this.quicknav = document.getElementsByClassName('quicknav' + whichPane)[0]
+    this.anotherPane = ''
+    this.visibleFileList = []
+  }
 
   ini(anotherPane, isActive) {
     this.anotherPane = anotherPane
     this.showList(this.dirs.now, isActive)
   }
 
+  //set highlight of files
+  inactive(i) {
+    this.fileItems[i].parentNode.classList.remove('highlight')
+  }
+
+  active(i) {
+    this.fileItems[i].parentNode.classList.add('highlight')
+  }
+  showFileList() {
+    // add file list in html
+    var paneInnerText = ''
+    var nameClassStr = ''
+    var sizeStr = ''
+    var dateStr = ''
+    for (let i = 0; i < this.fileList.length; i++) {
+      const filename = this.fileList[i].name
+      const filesize = this.fileList[i].size
+      const filedate = this.fileList[i].atime
+      nameClassStr = "<td class='name" + this.whichPane + "'>" + filename + '</td>'
+      sizeStr = "<td class='size'>" + filesize + '</td>'
+      dateStr = "<td class='date'>" + filedate + '</td>'
+
+      if (this.fileList[i].hide) {
+        console.log(this.fileList[i].hide)
+        paneInnerText = paneInnerText + "<tr class = 'filelist hide'>" + nameClassStr + sizeStr + dateStr + '</tr>'
+      }
+      else
+        paneInnerText = paneInnerText + "<tr class = 'filelist'>" + nameClassStr + sizeStr + dateStr + '</tr>'
+    }
+    this.paneId.innerHTML = paneInnerText
+  }
+
+  addOnclick() {
+    // add onclick function on each file
+    this.refreshFolder()
+    for (let i = 0; i < this.fileItems.length; i++) {
+      this.fileItems[i].parentNode.addEventListener('click', () => {
+        // this.clearOtherCursor()
+        this.key = i
+        // this.activepane = this.whichPane
+        this.resetCursor(i)
+        // this.active(i)
+        this.clearCursor(this.anotherPane)
+      })
+    }
+  }
+
+
+  resetCursor(i = this.key) {
+    // if position is number, hightlight the file selected,
+    // if position="hide", none of file is hightlight
+    this.clearCursor(this)
+    this.refreshFolder()
+    this.active(i)
+    this.key = i
+  }
+
+  clearCursor(anotherPane) {
+    for (let i = 0; i < anotherPane.fileItems.length; i++)
+      anotherPane.inactive(i)
+  }
+
+  static resetWindowHeight() {
+    const windowheight = document.documentElement.clientHeight
+    const sectionelem = document.getElementsByTagName('section')
+    document.getElementsByTagName('main')[0].style.height = windowheight.toString() + 'px'
+    sectionelem[0].style.height = (windowheight - 93).toString() + 'px'
+    sectionelem[1].style.height = (windowheight - 93).toString() + 'px'
+  }
+  //read dir and show on font end
   async showList(paneDir, isActive) {
-     console.log('showlist')
+    console.log('showlist')
     // clear filelist
     this.fileList = []
     // refersh dirs
@@ -50,35 +134,36 @@ class Pane extends Fman {
           }
           filedate = common.dateFormat(stats.atime)
           this.fileList[k] = new file(filedir, dirent, filetype, filesize, filedate)
-
           k = k + 1
         }
       } catch (err) {
-        console.error(err)
+        // console.error(err)
       }
-
     }
     this.showFileList()
-
     this.setDirHeader(paneDir)
     this.addOnclick()
     this.addOndblclick()
-    if (isActive){
+    if (isActive) {
       this.active(0)
     }
-      
+  }
+  refreshFolder() {
+    this.fileItems = document.getElementsByClassName('name' + this.whichPane)
+  }
+
+  setDirHeader(dircectory) {
+    this.dirEle.innerHTML = dircectory
   }
 
   ishidden(file) {
     hidefile.shouldBeHidden(file.dir, (err, result) => {
       if (err == null) {
         // console.log(result);  //-> true
-        if (result) {
+        if (result)
           file.hide = 1
-        }
-        else {
+        else
           file.hide = 0
-        }
       }
       else {
         console.log(err)
@@ -101,9 +186,8 @@ class Pane extends Fman {
   openFileOrFolder() {
     var i = this.key
     //if folder is empty, do nothing
-    if(this.fileList.length==0)
+    if (this.fileList.length == 0)
       return
-
     // for fs, the dir needn't add "", but for exec, the dir should add "" for which include space.
     if (this.fileList[i].type == 'folder') {
       this.showList(this.fileList[i].dir + '/', 1)
@@ -142,10 +226,60 @@ class file {
     // console.log(splitFileDir.join('/'))
     return splitFileDir.join('/')
   }
-  folder(){
+  folder() {
     var filedirlist = this.dir.split('/')
-    if(filedirlist.length>=2)
-      return filedirlist.slice(0,filedirlist.length-1).join('/')
+    if (filedirlist.length >= 2)
+      return filedirlist.slice(0, filedirlist.length - 1).join('/')
+  }
+  get isfile() {
+    if (this.type == 'file')
+      return this._isfile = 1
+    else
+      return this._isfile = 0
+  }
+  set isfile(truth){
+    this._isfile = truth
   }
 }
+
+class Filedirs {
+  constructor(directory) {
+    this.previous = directory
+    this.now = directory
+    this.parentDir = ''
+  }
+
+  set(directory) {
+    if (this.now !== directory) {
+      this.previous = this.now
+      this.now = directory
+    }
+  }
+  getParentDir() {
+    var splitFileDir = this.now.split('/')
+    console.log(splitFileDir)
+    var sdir = []
+    for (var dir in splitFileDir) {
+      console.log(splitFileDir[dir])
+      if (splitFileDir[dir] == '')
+        break
+      sdir.push(splitFileDir[dir])
+    }
+    splitFileDir = sdir
+    console.log(splitFileDir)
+    // if(splitFileDir.slice(0,-2).length>=1){
+    //   this.parentDir = splitFileDir.slice(0,-2).join('/')+'/'
+    //   return this.parentDir
+    // }
+    // else{
+    //   this.parentDir = splitFileDir.slice(0,-1).join('/')+'/'
+    //   return this.parentDir
+    // }
+    if (splitFileDir.length == 1)
+      return this.now
+    this.parentDir = splitFileDir.slice(0, -1).join('/') + '/'
+    return this.parentDir
+  }
+}
+
 module.exports = Pane
