@@ -42,6 +42,7 @@ class quickcmd {
     }
     //rename fle
     if (transCmd[0] == 'rename') {
+      //input new path
       this.rename(transCmd[1])
     }
   }
