@@ -107,7 +107,7 @@ class keydown {
   }
   backDir(pane, anotherpane) {
     var parentDir = pane.dirs.getParentDir()
-    pane.showList(parentDir, anotherpane, 1)
+    pane.showList(parentDir, 1)
   }
   press(keyWord) {
     if (keyWord == 'backspace') {

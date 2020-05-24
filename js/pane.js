@@ -144,6 +144,7 @@ class Pane {
     this.setDirHeader(paneDir)
     this.addOnclick()
     this.addOndblclick()
+    // this.resetCursor()
     if (isActive) {
       this.active(0)
     }
