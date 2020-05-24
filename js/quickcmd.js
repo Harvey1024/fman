@@ -42,25 +42,30 @@ class quickcmd {
     }
     //rename fle
     if (transCmd[0] == 'rename') {
-      //input new path
+      //input new
       this.rename(transCmd[1])
     }
   }
-  rename(newPath){
+  rename(newPath) {
+
     var key = this.mainp.activepane.key
     var file = this.mainp.activepane.fileList[key]
+    //if empty, return
+    if (!file){
+      console.log('Folder is empty')
+      return
+    }
+      
     var filedir = file.dir
     var target = this.mainp.activepane.dirs.now + newPath
-    if (file.isfile) {
-      console.log('target')
-      fs.rename(filedir, target, (err) => {
-        if (err)
-          throw err
-        elseA
-          console.log('copy')
-        this.refreshDir()
-      })
-    }
+    console.log('target')
+    fs.rename(filedir, target, (err) => {
+      if (err)
+        throw err
+      else
+        console.log('copy')
+      this.refreshDir()
+    })
   }
   copy() {
     var key = this.mainp.activepane.key
