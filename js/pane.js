@@ -58,6 +58,10 @@ class Pane {
         paneInnerText = paneInnerText + "<tr class = 'filelist'>" + nameClassStr + sizeStr + dateStr + '</tr>'
     }
     this.paneId.innerHTML = paneInnerText
+    //add onclick and ondbclick
+    this.addOnclick()
+    this.addOndblclick()
+
   }
 
   addOnclick() {
@@ -133,7 +137,7 @@ class Pane {
             filesize = common.fileSizeFormat(stats.size)
           }
           filedate = common.dateFormat(stats.atime)
-          this.fileList[k] = new file(filedir, dirent, filetype, filesize, filedate)
+          this.fileList[k] = new file(filedir, dirent, filetype, filesize, filedate,k)
           k = k + 1
         }
       } catch (err) {
@@ -142,8 +146,7 @@ class Pane {
     }
     this.showFileList()
     this.setDirHeader(paneDir)
-    this.addOnclick()
-    this.addOndblclick()
+    
     // this.resetCursor()
     if (isActive) {
       this.active(0)
@@ -206,16 +209,33 @@ class Pane {
   copyFile() { }
   newfile() { }
   newfolder() { }
+  sort(sorttype) {
+    var fileListSortByDate = []
+    if(sorttype == 'date'){
+      fileListSortByDate = this.fileList.sort(sortbyDateNewer)
+      console.log(fileListSortByDate)
+      this.fileList = fileListSortByDate
+    }
+    
+  }
 }
-
+// the oldest file rank first
+function sortbyDateOlder(a,b){
+  return a.dateToNum()-b.dateToNum()
+}
+//the latest file rank first
+function sortbyDateNewer(a,b){
+  return b.dateToNum()-a.dateToNum()
+}
 class file {
-  constructor(dir, name, type, size, atime) {
+  constructor(dir, name, type, size, atime,fileorder) {
     this.dir = dir
     this.name = name
     this.type = type
     this.size = size
     this.atime = atime
     this.hide = 0
+    this.fileOrder = fileorder
   }
   formatDir() {
     // if filename contain space, add "" for filename.
@@ -238,11 +258,32 @@ class file {
     else
       return this._isfile = 0
   }
-  set isfile(truth){
+  set isfile(truth) {
     this._isfile = truth
   }
+  dateToNum(){
+    var k = this.atime.split(/\s|:|\//)
+    return (+k[0] * 1000000 + k[1] * 10000 + k[2] * 100 + k[3] * 1 + k[4])
+  }
 }
-
+class fileLists{
+  constructor(files){
+    this.sortbyname = files
+  }
+  get sortbydate(){
+    var dateList = []
+    var fileOrder = [...Array(this.sortbyname.length).keys()]
+    for (var date of this.sortbyname) {
+      var k = date.atime.split(/\s|:|\//)
+      dateList.push(+k[0] * 1000000 + k[1] * 10000 + k[2] * 100 + k[3] * 1 + k[4])
+    }
+    for (var i of [...Array(dateList.length).keys()]) {
+      dateList[i] = +dateList[i]
+    }
+    console.log(dateList)
+    return this._sortbydate = dateList
+  }
+}
 class Filedirs {
   constructor(directory) {
     this.previous = directory

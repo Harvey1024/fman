@@ -45,6 +45,16 @@ class quickcmd {
       //input new
       this.rename(transCmd[1])
     }
+    //sort files by date
+    if (transCmd[0] == 'sortbydate') {
+      //input new
+      this.sortbydate()
+    }
+  }
+  sortbydate(){
+    this.mainp.activepane.sort('date')
+    this.mainp.activepane.showFileList()
+
   }
   rename(newPath) {
 
