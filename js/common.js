@@ -15,7 +15,16 @@ function dateFormat(date) {
 
 // transform date size from B to GB,M,KB
 function fileSizeFormat(size) {
-  return size.toString() + 'B'
+  var sizeF = ''
+  if(size<1024)
+    sizeF = size.toString() + 'B'
+  else if(size>1024 & size/1024<1024)
+    sizeF = (size/1024).toFixed(3).toString() + 'K'
+  else if(size/1024>1024 & size/1024/1024<1024)
+    sizeF = (size/1024/1024).toFixed(3).toString() + 'M'
+  else if(size/1024/1024>1024)
+    sizeF = (size/1024/1024/1024).toFixed(3).toString() + 'G'
+  return sizeF
 }
 
 // file filter

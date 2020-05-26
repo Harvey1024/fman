@@ -1,6 +1,6 @@
 // var fs = require("fs")
 
-var dirnow = ['C:/', 'C:/users/'] // file dir for left and right pane.
+var dirnow = ['C:/Users/CNANLI21/OneDrive - ABB/Small Robots/NGSR Pre/03 Design/IRB1210_C/', 'C:/users/'] // file dir for left and right pane.
 const qcmd = require('./js/quickcmd')
 // var cursorPosition={"left":0, "right":0};   //the order number of file selected for each pane.
 var keydown = require('./shortcut')
@@ -35,11 +35,11 @@ window.onresize = function () {
 
 // which pane is active
 // window.onclick = function () {
-  // if (Pane.activepane === mainp.leftpane.whichPane) {
-  //   mainp.rightpane.inactive()
-  // } else {
-  //   mainp.leftpane.inactive()
-  // }
+// if (Pane.activepane === mainp.leftpane.whichPane) {
+//   mainp.rightpane.inactive()
+// } else {
+//   mainp.leftpane.inactive()
+// }
 // }
 kd = new keydown()
 document.onkeydown = function (event) {
@@ -47,7 +47,7 @@ document.onkeydown = function (event) {
   kd.ini(event, mainp)
 }
 
-function filter(){
+function filter () {
   kd.filter(mainp.activepane)
 }
 
