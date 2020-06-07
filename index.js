@@ -1,6 +1,6 @@
 // var fs = require("fs")
 
-var dirnow = ['C:/', 'C:/users/'] // file dir for left and right pane.
+var dirnow = ['C:/users/', 'C:/users/'] // file dir for left and right pane.
 const qcmd = require('./js/quickcmd')
 // var cursorPosition={"left":0, "right":0};   //the order number of file selected for each pane.
 var keydown = require('./shortcut')
