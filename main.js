@@ -8,6 +8,10 @@ const path = require('path')
 
 var mainWindow = null
 
+const qcmd = require('./js/quickcmd')
+
+var dirlog = new qcmd.dirSumList()
+
 // quit while closed
 app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') {
@@ -25,6 +29,7 @@ app.on('ready', function () {
     }
   })
   Menu.setApplicationMenu(null)
+  // dirlog.readDirs()
   // load index.html
   var filepath = path.join(__dirname, 'index.html')
   mainWindow.loadURL('file://' + filepath)
@@ -34,5 +39,6 @@ app.on('ready', function () {
   // when window closed
   mainWindow.on('closed', function () {
     mainWindow = null
+    dirlog.test()
   })
 })

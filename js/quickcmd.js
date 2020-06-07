@@ -1,31 +1,31 @@
 const fs = require('fs')
 const exec = require('child_process').exec
 // var subProcess = spawn('cd C:/users/cnanli21/onedrive/ && python nn.py')
-function onData (data) {
+function onData(data) {
   process.stdout.write(data)
 }
 class dirSum {
-  constructor (count, dir) {
+  constructor(count, dir) {
     this.dir = dir
     this.count = count
   }
 
-  increase () {
+  increase() {
     this.count = this.count + 1
   }
 
-  sort () {
+  sort() {
 
   }
 }
 
 class quickcmd {
-  constructor () {
+  constructor() {
     this.cmdlist = []
     this.cmd = ''
   }
 
-  run (cmd, mainp, folder, fSelected) {
+  run(cmd, mainp, folder, fSelected) {
     this.cmd = cmd
     this.mainp = mainp
     var transCmd = this.cmd.split(' ')
@@ -66,12 +66,38 @@ class quickcmd {
     if (transCmd[0] === 'checkout') {
       this.tfcheckout()
     }
+    if (transCmd[0] === 'checkin' || transCmd[0] === 'ci') {
+      this.tfcheckin()
+    }
   }
 
-  tfcheckout () {
+  tfcheckin() {
     var panenow = this.mainp.activepane
     var dirnow = panenow.dirs.now
-    var filename = panenow.fileList(panenow.key).name
+    var filename = panenow.fileList[panenow.key].formatName()
+    var exString = 'cd ' + dirnow + ' && tf checkin '
+    exString = 'cd ' + dirnow
+
+    exec(exString, (err, stdout, stderr) => {
+      if (err) {
+        console.error(err)
+      }
+      else {
+        var exString2 = 'tf checkin'
+        exec(exString2)
+        console.log(exString2)
+      }
+      console.log(stdout)
+    })
+
+    var exString2 = 'tf checkin'
+    exec(exString2)
+  }
+
+  tfcheckout() {
+    var panenow = this.mainp.activepane
+    var dirnow = panenow.dirs.now
+    var filename = panenow.fileList[panenow.key].formatName()
     var exString = 'cd ' + dirnow + ' && tf checkout ' + filename
     exec(exString, (err, stdout, stderr) => {
       if (err) { console.error(err) }
@@ -79,9 +105,12 @@ class quickcmd {
     })
   }
 
-  tfget () {
-    var dirnow = this.mainp.activepane.dirs.now
-    var exString = 'cd ' + dirnow + ' && tf get'
+  tfget() {
+    var dirnow = this.mainp.activepane
+    // var filename = dirnow.fileList[dirnow.key].name
+    // var exString = 'cd ' + dirnow.dirs.now + ' && tf get ' + filename
+    var exString = 'cd ' + dirnow.dirs.now + ' && tf get'
+
     // + ' && tf checkin'
     console.log(exString)
     exec(exString)
@@ -96,12 +125,12 @@ class quickcmd {
     console.log('get')
   }
 
-  sortbydate () {
+  sortbydate() {
     this.mainp.activepane.sort('date')
     this.mainp.activepane.showFileList()
   }
 
-  rename (newPath) {
+  rename(newPath) {
     var key = this.mainp.activepane.key
     var file = this.mainp.activepane.fileList[key]
     // if empty, return
@@ -119,7 +148,7 @@ class quickcmd {
     })
   }
 
-  copy () {
+  copy() {
     var key = this.mainp.activepane.key
     var file = this.mainp.activepane.fileList[key]
     var filedir = file.dir
@@ -134,7 +163,7 @@ class quickcmd {
     }
   }
 
-  delet () {
+  delet() {
     var key = this.mainp.activepane.key
     var filedir = this.mainp.activepane.fileList[key].dir
     // delet file
@@ -152,7 +181,7 @@ class quickcmd {
     }
   }
 
-  newfile (newfilePath) {
+  newfile(newfilePath) {
     fs.open(newfilePath, 'wx', (err, fd) => {
       if (err) {
         // file that need to be created exist.
@@ -168,19 +197,19 @@ class quickcmd {
     // close the file
   }
 
-  newfolder (dir) {
+  newfolder(dir) {
     const paths = dir.split('/')
     console.log(paths)
     const index = 1
     this.newfolder_next(index, paths)
   }
 
-  refreshDir () {
+  refreshDir() {
     var dirNow = this.mainp.activepane.dirs.now
     this.mainp.activepane.showList(dirNow, 1)
   }
 
-  newfolder_next (index, paths) {
+  newfolder_next(index, paths) {
     if (index > paths.length) { return 0 }
     const newPath = paths.slice(0, index).join('/')
     console.log(newPath)
@@ -203,11 +232,11 @@ class quickcmd {
 }
 
 class dirSumList {
-  constructor () {
+  constructor() {
     this.dirSumList = []
   }
 
-  readDirs () {
+  readDirs() {
     var dirlist = []
     fs.readFile('dirlog.log', (err, data) => {
       console.log(data)
@@ -224,15 +253,20 @@ class dirSumList {
     })
   }
 
-  writDirs () {
+  writDirs() {
     var data = ''
     for (var i of [...Array(this.dirSumList.length).keys()]) {
       data = data + dirSumList[i][0] + '\t' + dirSumList[i][1] + '\n'
     }
     fs.writeFile('dirlog.log', data, (err) => { console.log(err) })
   }
+  test() {
+    fs.writeFile('dirlog.log', 'hello world3', 'utf8', (err) => {
+      console.log(err)
+    })
+  }
 
-  add () {
+  add() {
 
   }
 }

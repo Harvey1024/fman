@@ -5,7 +5,7 @@ var exec = require('child_process').exec
 const hidefile = require('hidefile')
 
 class Pane {
-  constructor (whichPane, directory) {
+  constructor(whichPane, directory) {
     this.activestate = 0
     // this.activepane = ''
     this.whichPane = whichPane // "left" or "right"
@@ -23,21 +23,21 @@ class Pane {
     this.visibleFileList = []
   }
 
-  ini (anotherPane, isActive) {
+  ini(anotherPane, isActive) {
     this.anotherPane = anotherPane
     this.showList(this.dirs.now, isActive)
   }
 
   // set highlight of files
-  inactive (i) {
+  inactive(i) {
     this.fileItems[i].parentNode.classList.remove('highlight')
   }
 
-  active (i) {
+  active(i) {
     this.fileItems[i].parentNode.classList.add('highlight')
   }
 
-  showFileList () {
+  showFileList() {
     // add file list in html
     var paneInnerText = ''
     var nameClassStr = ''
@@ -62,7 +62,7 @@ class Pane {
     this.addOndblclick()
   }
 
-  addOnclick () {
+  addOnclick() {
     // add onclick function on each file
     this.refreshFolder()
     for (let i = 0; i < this.fileItems.length; i++) {
@@ -77,7 +77,7 @@ class Pane {
     }
   }
 
-  resetCursor (i = this.key) {
+  resetCursor(i = this.key) {
     // if position is number, hightlight the file selected,
     // if position="hide", none of file is hightlight
     this.clearCursor(this)
@@ -86,11 +86,11 @@ class Pane {
     this.key = i
   }
 
-  clearCursor (anotherPane) {
+  clearCursor(anotherPane) {
     for (let i = 0; i < anotherPane.fileItems.length; i++) { anotherPane.inactive(i) }
   }
 
-  static resetWindowHeight () {
+  static resetWindowHeight() {
     const windowheight = document.documentElement.clientHeight
     const sectionelem = document.getElementsByTagName('section')
     document.getElementsByTagName('main')[0].style.height = windowheight.toString() + 'px'
@@ -99,7 +99,7 @@ class Pane {
   }
 
   // read dir and show on font end
-  async showList (paneDir, isActive) {
+  async showList(paneDir, isActive) {
     console.log('showlist')
     // clear filelist
     this.fileList = []
@@ -149,15 +149,15 @@ class Pane {
     }
   }
 
-  refreshFolder () {
+  refreshFolder() {
     this.fileItems = document.getElementsByClassName('name' + this.whichPane)
   }
 
-  setDirHeader (dircectory) {
+  setDirHeader(dircectory) {
     this.dirEle.innerHTML = dircectory
   }
 
-  ishidden (file) {
+  ishidden(file) {
     hidefile.shouldBeHidden(file.dir, (err, result) => {
       if (err == null) {
         // console.log(result);  //-> true
@@ -168,7 +168,7 @@ class Pane {
     })
   }
 
-  addOndblclick () {
+  addOndblclick() {
     this.refreshFolder()
     for (let i = 0; i < this.fileItems.length; i++) {
       this.fileItems[i].addEventListener('dblclick', () => {
@@ -178,7 +178,7 @@ class Pane {
     }
   }
 
-  openFileOrFolder () {
+  openFileOrFolder() {
     var i = this.key
     // if folder is empty, do nothing
     if (this.fileList.length === 0) { return }
@@ -193,12 +193,12 @@ class Pane {
     }
   }
 
-  renameFile () { }
-  deletFile () { }
-  copyFile () { }
-  newfile () { }
-  newfolder () { }
-  sort (sorttype) {
+  renameFile() { }
+  deletFile() { }
+  copyFile() { }
+  newfile() { }
+  newfolder() { }
+  sort(sorttype) {
     var fileListSortByDate = []
     if (sorttype == 'date') {
       fileListSortByDate = this.fileList.sort(sortbyDateNewer)
@@ -208,15 +208,15 @@ class Pane {
   }
 }
 // the oldest file rank first
-function sortbyDateOlder (a, b) {
+function sortbyDateOlder(a, b) {
   return a.dateToNum() - b.dateToNum()
 }
 // the latest file rank first
-function sortbyDateNewer (a, b) {
+function sortbyDateNewer(a, b) {
   return b.dateToNum() - a.dateToNum()
 }
 class file {
-  constructor (dir, name, type, size, atime, fileorder) {
+  constructor(dir, name, type, size, atime, fileorder) {
     this.dir = dir
     this.name = name
     this.type = type
@@ -226,7 +226,7 @@ class file {
     this.fileOrder = fileorder
   }
 
-  formatDir () {
+  formatDir() {
     // if filename contain space, add "" for filename.
     var splitFileDir = this.dir.split('/')
     for (let j = 0; j < splitFileDir.length; j++) {
@@ -237,30 +237,37 @@ class file {
     return splitFileDir.join('/')
   }
 
-  folder () {
+  formatName() {
+    if (this.name.indexOf(' ') != -1) {
+      this.name = '"' + this.name + '"'
+    }
+    return this.name
+  }
+
+  folder() {
     var filedirlist = this.dir.split('/')
     if (filedirlist.length >= 2) { return filedirlist.slice(0, filedirlist.length - 1).join('/') }
   }
 
-  get isfile () {
+  get isfile() {
     if (this.type == 'file') { return this._isfile = 1 } else { return this._isfile = 0 }
   }
 
-  set isfile (truth) {
+  set isfile(truth) {
     this._isfile = truth
   }
 
-  dateToNum () {
+  dateToNum() {
     var k = this.atime.split(/\s|:|\//)
     return (+k[0] * 1000000 + k[1] * 10000 + k[2] * 100 + k[3] * 1 + k[4])
   }
 }
 class fileLists {
-  constructor (files) {
+  constructor(files) {
     this.sortbyname = files
   }
 
-  get sortbydate () {
+  get sortbydate() {
     var dateList = []
     var fileOrder = [...Array(this.sortbyname.length).keys()]
     for (var date of this.sortbyname) {
@@ -275,20 +282,20 @@ class fileLists {
   }
 }
 class Filedirs {
-  constructor (directory) {
+  constructor(directory) {
     this.previous = directory
     this.now = directory
     this.parentDir = ''
   }
 
-  set (directory) {
+  set(directory) {
     if (this.now !== directory) {
       this.previous = this.now
       this.now = directory
     }
   }
 
-  getParentDir () {
+  getParentDir() {
     var splitFileDir = this.now.split('/')
     console.log(splitFileDir)
     var sdir = []

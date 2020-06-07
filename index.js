@@ -1,6 +1,6 @@
 // var fs = require("fs")
 
-var dirnow = ['C:/Users/CNANLI21/OneDrive - ABB/Small Robots/NGSR Pre/03 Design/IRB1210_C/', 'C:/users/'] // file dir for left and right pane.
+var dirnow = ['C:/', 'C:/users/'] // file dir for left and right pane.
 const qcmd = require('./js/quickcmd')
 // var cursorPosition={"left":0, "right":0};   //the order number of file selected for each pane.
 var keydown = require('./shortcut')
@@ -23,7 +23,7 @@ window.onload = function () {
   mainp.creatpane()
   mainp.activepane = mainp.leftpane
 
-  dirlog.readDirs()
+  // dirlog.readDirs()
   // mainp.addpaneOnclick()
   // rightpane.inactive();
 }
@@ -52,7 +52,8 @@ function filter () {
 }
 
 window.onclose = function () {
-  dirlog.writDirs()
+  // dirlog.writDirs()
+  // dirlog.test()
 }
 
 // k2 = new qcmd.quickcmd('new folder')
