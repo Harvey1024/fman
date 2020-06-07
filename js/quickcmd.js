@@ -1,6 +1,5 @@
 const fs = require('fs')
 const exec = require('child_process').exec
-// var subProcess = spawn('cd C:/users/cnanli21/onedrive/ && python nn.py')
 function onData(data) {
   process.stdout.write(data)
 }
@@ -120,7 +119,7 @@ class quickcmd {
     // })
     // exec()
     // subProcess.stdout.on('data', onData)
-    // subProcess.stdin.write('cd C:/users/cnanli21/onedrive/ \n')
+    // subProcess.stdin.write('cd C:/users/ \n')
     // subProcess.stdin.write('python nn.py')
     console.log('get')
   }
