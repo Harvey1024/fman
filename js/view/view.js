@@ -1,19 +1,33 @@
 var panView = require("./paneview")
+var Fman = require('../model/fman')
 class View {
-    constructor() {
-        this.panelist = [new panView(), new panView]
-        this.paneState = []
-    }
-
     activePane() { }
-    refleshPane() { }
+    async refresh() { }
 }
 
 class MainView extends View {
-    activePane(i) {
-        this.panelist[i].active()
+    constructor() {
+        super()
+        this.fman = new Fman()
+
+        this.panelist = [this.fman.leftpane, this.fman.rightpane]
+        this.paneViewlist = [new panView('left', this.fman.leftpane), new panView('right', this.fman.rightpane)]        
+        this.paneState = []
     }
-    refleshPane(i) {
-        this.panelistp[i].reflesh()
+    activePane(key) {
+        if (key == 'left')
+            this.paneViewlist[0].active()
+        else
+            this.paneViewlist[1].active()
+    }
+    async refresh() {
+        for await (const key of this.paneViewlist.keys()) {
+            this.fman.leftdir = 'C:/'
+            this.fman.rightdir = 'C:/'
+            await this.panelist[key].refresh()
+            await this.paneViewlist[key].showFiles()
+        }
     }
 }
+
+module.exports = MainView
