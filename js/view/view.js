@@ -22,7 +22,7 @@ class MainView extends View {
   refresh () {
     for (const key of this.paneViewlist.keys()) {
       this.fman.leftdir = 'C:/'
-      this.fman.rightdir = 'C:/data/sap_doc/'
+      this.fman.rightdir = 'D:/'
       //   await this.panelist[key].refresh()
       this.paneViewlist[key].showFiles()
     }

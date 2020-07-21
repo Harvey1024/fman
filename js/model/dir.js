@@ -39,7 +39,7 @@ class Dir extends AbstractDir {
     }
     splitFileDir = sdir
 
-    if (splitFileDir.length === 1) { return this.now }
+    if (splitFileDir.length === 1) { return this.dir }
     var parentDir = splitFileDir.slice(0, -1).join('/') + '/'
     return parentDir
   }

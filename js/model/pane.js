@@ -25,8 +25,10 @@ class Pane extends AbastractPane {
   }
 
   async refresh () {
+    console.log("refresh")
     await this.filelist.getFileList(this.dir)
     this.files = this.filelist.filelist
+    console.log(this.files)
   }
 
   getState () {

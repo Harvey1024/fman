@@ -40,6 +40,8 @@ class FileList extends AbstractFileList {
   async getFileList (dir) {
     this.filelist = []
     const files = await fs.promises.readdir(dir)
+    console.log("get file"+dir)
+    console.log(files)
     var k = 0
     for await (const filename of files) {
       // get dirent type, show type 2 file or folder
@@ -47,7 +49,7 @@ class FileList extends AbstractFileList {
       // electron can't use promises.opendir, then can't get fs.dirent
       // system files are not alowed get stats, then use try
       try {
-        var result = hidefile.shouldBeHiddenSync(filedir)
+        var result = await hidefile.shouldBeHiddenSync(filedir)
         if (result) {
           // console.log(filedir)
         } else {
@@ -76,6 +78,7 @@ class FileList extends AbstractFileList {
         // console.error(err)
       }
     }
+    console.log(this.filelist)
   }
 
   filter (keyword) {

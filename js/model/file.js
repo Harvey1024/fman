@@ -11,7 +11,7 @@ class AbstractFile {
     this.atime = ''
     this.fulldir = filedir
     // this.dir = ''
-    this.dirObj = new Dir()
+    
   }
 
   rename () { }
@@ -21,20 +21,16 @@ class AbstractFile {
 }
 
 class File extends AbstractFile {
-  set dir (d) {
-    this._dir = d
-    this.dirObj.dir = d
-  }
-
-  get dir () {
-    return this._dir
-  }
-
   constructor (filedir) {
     super(filedir)
     this.dir = filedir
   }
-
+  set dir(d){
+    this._dir = d
+  }
+  get dir(){
+    return this._dir
+  }
   async open () {
     console.log('open ' + this.dir)
     await exec(this.dir)
@@ -44,7 +40,7 @@ class File extends AbstractFile {
 class Folder extends AbstractFile {
   constructor (folderdir) {
     super(folderdir)
-    this.dir.dir = folderdir
+    this.dir = folderdir
   }
 }
 
