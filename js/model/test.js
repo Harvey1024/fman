@@ -1,5 +1,5 @@
-console.log("hello")
-var FileList = require("./filelist")
-
-f = new FileList("D:/")
-f.getFileList("D:/")
+const F = require('./file')
+const Fa = F.FileFactory
+var f = new Fa('file', 'C:/ab/')
+console.log(f.dir)
+console.log(f.dirObj.pre)
