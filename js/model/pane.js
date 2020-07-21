@@ -1,26 +1,30 @@
 var FileList = require('./filelist')
 
-class AbastractPane{
-    constructor(){
-        this.filelist = new FileList() 
-        this.dir = ''
-        this.namelist = []
-    }
-    refresh(){}
-    getState(){}
-    setState(){}
+class AbastractPane {
+  constructor () {
+    this.filelist = new FileList()
+    this.dir = ''
+    this.files = []
+  }
+
+  refresh () {}
+  getState () {}
+  setState () {}
 }
 
-class Pane extends AbastractPane{
-    async refresh(){
-        await this.filelist.getFileList(this.dir)
-    }
-    getState(){
+class Pane extends AbastractPane {
+  async refresh () {
+    await this.filelist.getFileList(this.dir)
+    this.files = this.filelist.filelist
+  }
 
-    }
-    setState(){
+  getState () {
 
-    }
+  }
+
+  setState () {
+
+  }
 }
 
 module.exports = Pane

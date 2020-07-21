@@ -9,44 +9,40 @@ var exec = require('child_process').exec
 var filterbegin = 0
 // var rangeArray = (start, end) => Array(end - start + 1).fill(0).map((v, i) => i + start)
 class keydown {
-  construstor() {
+  construstor () {
     this.e = ''
     this.inputvalue = ''
     this.mainp = ''
     this.quickcmd = ''
     this.qcmd = ''
   }
-  ini(event, mainp) {
 
+  ini (event, mainp) {
     this.mainp = mainp
     this.e = event || window.event || arguments.callee.caller.arguments[0]
     this.inputvalue = mainp.activepane.quicknav.children[0].value
     this.quickcmd = document.getElementsByClassName('quickcmd')[0]
     this.qcmd = new qcmd.quickcmd()
-    //backspace
+    // backspace
     if (this.press('backspace')) {
       // if quickcmd is hide, back to previous dir
       if (this.quickCmdisHide()) {
         if (this.inputvalue == '')
-          mainp.activepane.quicknav.classList.add('hide')
+          {mainp.activepane.quicknav.classList.add('hide')}
         this.backDir(mainp.activepane, mainp.inactivpane)
-      }
-      else {
+      } else {
 
       }
-
     }
 
     if (this.press('esc')) {
       this.exit()
     }
     if (this.e.key == 'Enter') {
-
       // if quickcmd is hide, open file or folder
       if (this.quickCmdisHide()) {
         this.mainp.activepane.openFileOrFolder()
-      }
-      else {
+      } else {
         console.log('cmd')
         // if quickcmd is active, run
         this.runQcmd()
@@ -75,9 +71,9 @@ class keydown {
       this.showQuickCmd()
       this.quickCommand()
     }
-
   }
-  runQcmd() {
+
+  runQcmd () {
     var cmdinput = document.getElementById('quickCmdInput').value
     var activeKey = this.mainp.activepane.key
     var selectedFile = this.mainp.activepane.fileList[activeKey]
@@ -86,30 +82,34 @@ class keydown {
     // clear input content.
     document.getElementById('quickCmdInput').value = ''
   }
-  quickCmdisHide() {
+
+  quickCmdisHide () {
     if (this.quickcmd.classList.length == 2)
-      return 1 //hide
+      {return 1} // hide
     else
-      return 0 // not hide
+      {return 0} // not hide
   }
-  quickDir() {
-    //read dirlog file
+
+  quickDir () {
+    // read dirlog file
     console.log('hello')
+  }
 
+  quickCommand () {
 
   }
-  quickCommand() {
 
-  }
-  showQuickCmd() {
+  showQuickCmd () {
     this.quickcmd.classList.remove('hide')
     document.getElementsByClassName('cmdheader')[0].children[0].focus()
   }
-  backDir(pane, anotherpane) {
+
+  backDir (pane, anotherpane) {
     var parentDir = pane.dirs.getParentDir()
     pane.showList(parentDir, 1)
   }
-  press(keyWord) {
+
+  press (keyWord) {
     if (keyWord == 'backspace') {
       return this.e && this.e.key == 'Backspace' && this.inputvalue == ''
     }
@@ -122,12 +122,14 @@ class keydown {
       console.log('esc')
     }
   }
-  sortfiles(panenow) {
+
+  sortfiles (panenow) {
     panenow.quicknav.classList.remove('hide')
     panenow.quicknav.children[0].focus()
     this.inputvalue = panenow.quicknav.children[0].value
   }
-  filter(panenow) {
+
+  filter (panenow) {
     this.inputvalue = panenow.quicknav.children[0].value
     console.log(this.inputvalue)
     if (!this.inputvalue) { // if empty, hide
@@ -142,83 +144,81 @@ class keydown {
     // set panenow key
     panenow.key = firstfile
   }
-  removeHideAll(panenow) {
+
+  removeHideAll (panenow) {
     for (let i = 0; i <= panenow.fileItems.length - 1; i++) {
       panenow.fileItems[i].parentNode.classList.remove('hide')
     }
   }
-  exit() {
+
+  exit () {
     console.log('exit')
     this.removeHideAll(this.mainp.activepane)
     this.mainp.activepane.quicknav.children[0].value = ''
     this.mainp.activepane.quicknav.classList.add('hide')
 
-    //hide quickcmd box and clear content.
+    // hide quickcmd box and clear content.
     this.quickcmd.classList.add('hide')
     document.getElementById('quickCmdInput').value = ''
   }
-  openFileOrFolder() {
+
+  openFileOrFolder () {
     this.mainp.activepane.openFileOrFolder()
   }
-  arrowUporDown(arrow) {
+
+  arrowUporDown (arrow) {
     var panenow = this.mainp.activepane
     this.e.preventDefault() // prevent previeous scroll event
     var cursorPosNow = 0
     if (!this.inputvalue) {
       if (arrow == 'up') {
         cursorPosNow = panenow.key - 1
-      }
-      else if (arrow == 'down') {
+      } else if (arrow == 'down') {
         cursorPosNow = panenow.key + 1
       }
       if (cursorPosNow < 0 || cursorPosNow >= panenow.fileList.length) {
         cursorPosNow = panenow.key
       }
-    }
-    else {
+    } else {
       // if the files is filtered
       var visibleFileList = this.mainp.activepane.visibleFileList
       if (arrow == 'up') {
         var visblePo = visibleFileList.indexOf(panenow.key) - 1
         if (visblePo >= 0)
-          cursorPosNow = visibleFileList[visblePo]
+          {cursorPosNow = visibleFileList[visblePo]}
         else
-          cursorPosNow = panenow.key
-      }
-      else if (arrow == 'down') {
+          {cursorPosNow = panenow.key}
+      } else if (arrow == 'down') {
         var visblePo = visibleFileList.indexOf(panenow.key) + 1
         if (visblePo <= visibleFileList.length - 1)
-          cursorPosNow = visibleFileList[visblePo]
+          {cursorPosNow = visibleFileList[visblePo]}
         else
-          cursorPosNow = panenow.key
+          {cursorPosNow = panenow.key}
       }
-
     }
     panenow.fileItems[cursorPosNow].click()
     panenow.fileItems[cursorPosNow].scrollIntoViewIfNeeded()
   }
-  activeAnother() {
+
+  activeAnother () {
     var anotherpane = ''
     var panenow = this.mainp.activepane
     if (this.mainp.activepane == this.mainp.panes[0])
-      anotherpane = this.mainp.panes[1]
+      {anotherpane = this.mainp.panes[1]}
     else
-      anotherpane = this.mainp.panes[0]
+      {anotherpane = this.mainp.panes[0]}
 
     this.mainp.activepane = anotherpane
 
     if (panenow.fileList.length == 0) {
       panenow.inactive(panenow.key)
-    }
-    else
-      anotherpane.fileItems[panenow.key].click()
+    } else
+      {anotherpane.fileItems[panenow.key].click()}
     // this.mainp.activepane.resetCursor()
   }
 }
 
-
-
-function keydown2(event, mainp) {
+function keydown2 (event, mainp) {
   var e = event || window.event || arguments.callee.caller.arguments[0]
   console.log(e.keyCode)
 
@@ -351,7 +351,7 @@ function keydown2(event, mainp) {
   }
 }
 
-function inputFilter(panenow) {
+function inputFilter (panenow) {
   // var [panelast, panenow] = getPane()
   // get input box value
   var inputvalue = panenow.quicknav.children[0].value

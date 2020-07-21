@@ -1,9 +1,8 @@
 // var fs = require("fs")
 const MainPane = require('./js/view/view')
 // initial filelist after html loaded
-
+var mainpane = new MainPane()
 window.onload = function () {
-  mainpane = new MainPane()
   mainpane.refresh()
 }
 
@@ -11,7 +10,6 @@ window.onload = function () {
 window.onresize = function () {
   // Pane.resetWindowHeight()
 }
-
 
 // kd = new keydown()
 document.onkeydown = function (event) {
