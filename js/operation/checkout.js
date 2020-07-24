@@ -1,9 +1,8 @@
 const Operation = require('./operation')
 
-export default class Copy extends Operation {
-  constructor (sourcePath, targetPath) {
+export default class Checkout extends Operation {
+  constructor (targetPath) {
     super()
-    this._sourcePath = sourcePath
     this._targetPath = targetPath
   }
 
