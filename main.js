@@ -8,9 +8,9 @@ const path = require('path')
 
 var mainWindow = null
 
-const qcmd = require('./js/quickcmd')
+// const qcmd = require('./js/quickcmd')
 
-var dirlog = new qcmd.dirSumList()
+// var dirlog = new qcmd.dirSumList()
 
 // quit while closed
 app.on('window-all-closed', function () {
@@ -39,6 +39,6 @@ app.on('ready', function () {
   // when window closed
   mainWindow.on('closed', function () {
     mainWindow = null
-    dirlog.test()
+    // dirlog.test()
   })
 })
