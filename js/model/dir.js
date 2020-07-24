@@ -1,7 +1,7 @@
 
 class AbstractDir {
   constructor () {
-    this.previous = ''
+    this.pre = ''
   }
 
   formate () {}
@@ -12,7 +12,7 @@ class AbstractDir {
 class Dir extends AbstractDir {
   set dir (d) {
     this._dir = d
-    this.previous = this.previous()
+    this.pre = this.previous()
   }
 
   get dir () {

@@ -10,7 +10,8 @@ class AbstractFile {
     this.type = ''
     this.atime = ''
     this.fulldir = filedir
-    this.dir = new Dir()
+    // this.dir = ''
+    this.dirObj = new Dir()
   }
 
   rename () { }
@@ -20,9 +21,18 @@ class AbstractFile {
 }
 
 class File extends AbstractFile {
+  set dir (d) {
+    this._dir = d
+    this.dirObj.dir = d
+  }
+
+  get dir () {
+    return this._dir
+  }
+
   constructor (filedir) {
     super(filedir)
-    this.dir.dir = filedir
+    this.dir = filedir
   }
 
   async open () {
