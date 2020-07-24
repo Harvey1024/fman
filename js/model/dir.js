@@ -30,10 +30,8 @@ class Dir extends AbstractDir {
 
   previous () {
     var splitFileDir = this.dir.split('/')
-    console.log(splitFileDir)
     var sdir = []
     for (var dir in splitFileDir) {
-      console.log(splitFileDir[dir])
       if (splitFileDir[dir] === '') { break }
       sdir.push(splitFileDir[dir])
     }
