@@ -1,34 +1,26 @@
 // some common function, date frormant, keycode ...
 
 // transform date formate from "Thu Nov 07 2019 18:29:48 GMT+0" to "2019/11/07 18:29"
-function dateFormat(date) {
+function dateFormat (date) {
   var year = date.getFullYear().toString().slice(2, 4)
   var month = date.getMonth().toString()
   var day = date.getDate().toString()
   var hour = date.getHours().toString()
   var minutes = date.getMinutes().toString()
-  if (minutes.length == 1)
-    minutes = '0' + minutes
+  if (minutes.length == 1) { minutes = '0' + minutes }
 
   return year + '/' + month + '/' + day + ' ' + hour + ':' + minutes
 }
 
 // transform date size from B to GB,M,KB
-function fileSizeFormat(size) {
+function fileSizeFormat (size) {
   var sizeF = ''
-  if(size<1024)
-    sizeF = size.toString() + 'B'
-  else if(size>1024 & size/1024<1024)
-    sizeF = (size/1024).toFixed(3).toString() + 'K'
-  else if(size/1024>1024 & size/1024/1024<1024)
-    sizeF = (size/1024/1024).toFixed(3).toString() + 'M'
-  else if(size/1024/1024>1024)
-    sizeF = (size/1024/1024/1024).toFixed(3).toString() + 'G'
+  if (size < 1024) { sizeF = size.toString() + 'B' } else if (size > 1024 & size / 1024 < 1024) { sizeF = (size / 1024).toFixed(3).toString() + 'K' } else if (size / 1024 > 1024 & size / 1024 / 1024 < 1024) { sizeF = (size / 1024 / 1024).toFixed(3).toString() + 'M' } else if (size / 1024 / 1024 > 1024) { sizeF = (size / 1024 / 1024 / 1024).toFixed(3).toString() + 'G' }
   return sizeF
 }
 
 // file filter
-function fileFilter(panenow, str, files) {
+function fileFilter (panenow, str, files) {
   // clear highlight
   // panenow.resetCursor()
   var visibleFileList = []
@@ -49,13 +41,10 @@ function fileFilter(panenow, str, files) {
     // }
     if (filename.toUpperCase().indexOf(str.toUpperCase()) == -1) {
       panenow.fileItems[i].parentNode.classList.add('hide')
-
-    }
-    else {
+    } else {
       visibleFileList[k] = i
       k++
     }
-
   }
   // panenow.active(visibleFileList[0])
 
@@ -67,7 +56,7 @@ function fileFilter(panenow, str, files) {
   panenow.visibleFileList = visibleFileList
   return visibleFileList[0]
 }
-function hello() {
+function hello () {
   console.log('hello')
 }
 module.exports = {

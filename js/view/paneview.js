@@ -3,7 +3,6 @@ const File = Fs.File
 const Folder = Fs.Folder
 
 class PaneView {
-  constructor () { }
   showFiles () { }
   addOnclick () { }
   addOndblclick () { }

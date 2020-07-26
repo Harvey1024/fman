@@ -53,6 +53,12 @@ class FileList extends AbstractFileList {
         } else {
           // if file is not hide, add file to fileList
           const stats = await fs.promises.stat(filedir)
+          // try {
+          //   const stats = fs.promises.stat(filedir)
+          // } catch (err) {
+          //   console.log(err)
+          //   continue
+          // }
           var filesize = ''
           var filetype = ''
           if (stats.isDirectory()) {

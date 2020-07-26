@@ -1,4 +1,4 @@
-
+const PaneObserver = require('./observer')
 const Pane = require('./pane')
 
 class AbastractFman {

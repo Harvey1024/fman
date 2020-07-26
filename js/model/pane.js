@@ -6,11 +6,12 @@ class AbastractPane {
     this.filelist = new FileList()
     this.files = []
     this.dirObj = new Dir()
+    this.observerList = []
   }
 
   refresh () {}
-  getState () {}
-  setState () {}
+  getObserver () {}
+  attachObserver () {}
 }
 
 class Pane extends AbastractPane {
@@ -29,12 +30,14 @@ class Pane extends AbastractPane {
     this.files = this.filelist.filelist
   }
 
-  getState () {
-
+  getObserver () {
+    return this.observerList
   }
 
-  setState () {
-
+  attachObserver (obser) {
+    if (this.observerList.indexOf(obser) === -1) {
+      this.observerList.push(obser)
+    }
   }
 }
 

@@ -13,6 +13,8 @@ class MainView extends View {
     this.panelist = [this.fman.leftpane, this.fman.rightpane]
     this.paneViewlist = [new panView('left', this.fman.leftpane), new panView('right', this.fman.rightpane)]
     this.paneState = []
+    this.filelists = [this.fman.leftpane, this.fman.rightpane]
+    
   }
 
   activePane (key) {
@@ -22,7 +24,7 @@ class MainView extends View {
   refresh () {
     for (const key of this.paneViewlist.keys()) {
       this.fman.leftdir = 'C:/'
-      this.fman.rightdir = 'C:/data/sap_doc/'
+      this.fman.rightdir = 'C:/'
       //   await this.panelist[key].refresh()
       this.paneViewlist[key].showFiles()
     }

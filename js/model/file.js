@@ -21,6 +21,11 @@ class AbstractFile {
 }
 
 class File extends AbstractFile {
+  constructor (filedir) {
+    super(filedir)
+    this.dir = filedir
+  }
+
   set dir (d) {
     this._dir = d
     this.dirObj.dir = d
@@ -28,11 +33,6 @@ class File extends AbstractFile {
 
   get dir () {
     return this._dir
-  }
-
-  constructor (filedir) {
-    super(filedir)
-    this.dir = filedir
   }
 
   async open () {
@@ -44,7 +44,7 @@ class File extends AbstractFile {
 class Folder extends AbstractFile {
   constructor (folderdir) {
     super(folderdir)
-    this.dir.dir = folderdir
+    this.dir = folderdir
   }
 }
 

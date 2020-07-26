@@ -1,5 +1,8 @@
 // var fs = require("fs")
 const MainPane = require('./js/view/view')
+// const keyHander = require('./js/command/commands')
+const KeyboardHander = require('./js/command/keyboard')
+
 // initial filelist after html loaded
 var mainpane = new MainPane()
 window.onload = function () {
@@ -11,10 +14,11 @@ window.onresize = function () {
   // Pane.resetWindowHeight()
 }
 
-// kd = new keydown()
+const keyHander = new KeyboardHander(mainpane)
 document.onkeydown = function (event) {
   // key event action
-  // kd.ini(event, mainp)
+  // console.log(event)
+  keyHander.hander(event)
 }
 
 // function filter () {
