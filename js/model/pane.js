@@ -28,6 +28,13 @@ class Pane extends AbastractPane {
   async refresh () {
     await this.filelist.getFileList(this.dir)
     this.files = this.filelist.filelist
+    this.notify()
+  }
+
+  notify () {
+    for (const obser of this.observerList) {
+      obser.update(this.files)
+    }
   }
 
   getObserver () {

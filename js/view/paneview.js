@@ -20,10 +20,12 @@ class panView extends PaneView {
     this.key = 0
   }
 
-  async showFiles () {
-    await this.pane.refresh()
-    this.files = this.pane.files
+  async showFiles (panefiles) {
+    // await this.pane.refresh()
+    // this.files = this.pane.files
     // add file list in html
+    this.files = panefiles
+
     var paneInnerText = ''
     var nameClassStr = ''
     var sizeStr = ''
@@ -77,7 +79,8 @@ class panView extends PaneView {
       this.pane.dir = this.files[this.key].dir + '/'
       this.dir = this.pane.dir
       console.log('open' + this.pane.dir)
-      this.showFiles()
+      this.pane.refresh()
+      // this.showFiles()
     }
   }
 

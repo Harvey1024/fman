@@ -2,10 +2,12 @@
 class Observer {
   constructor () {
     this._state = null
+    this.panView = null
   }
 
   getState (state) { }
   setState (state) { }
+  update (panefiles) { }
 }
 
 class PaneObserver extends Observer {
@@ -15,6 +17,10 @@ class PaneObserver extends Observer {
 
   getState (state) {
     this._state = state
+  }
+
+  update (panefiles) {
+    this.panView.showFiles(panefiles)
   }
 }
 

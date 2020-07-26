@@ -1,10 +1,10 @@
-const PaneObserver = require('./observer')
 const Pane = require('./pane')
 
 class AbastractFman {
   constructor () {
     this.leftpane = new Pane()
     this.rightpane = new Pane()
+    this.thisPane = this.leftpane
   }
 
   init () {}

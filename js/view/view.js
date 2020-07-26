@@ -1,5 +1,7 @@
 var panView = require('./paneview')
 var Fman = require('../model/fman')
+const PaneObserver = require('../model/observer')
+
 class View {
   activePane () { }
   refresh () { }
@@ -14,7 +16,16 @@ class MainView extends View {
     this.paneViewlist = [new panView('left', this.fman.leftpane), new panView('right', this.fman.rightpane)]
     this.paneState = []
     this.filelists = [this.fman.leftpane, this.fman.rightpane]
-    
+    this.addObserver()
+  }
+
+  addObserver () {
+    const leftObserver = new PaneObserver()
+    const rightObserver = new PaneObserver()
+    leftObserver.panView = this.paneViewlist[0]
+    rightObserver.panView = this.paneViewlist[1]
+    this.fman.leftpane.attachObserver(leftObserver)
+    this.fman.rightpane.attachObserver(rightObserver)
   }
 
   activePane (key) {
@@ -23,10 +34,10 @@ class MainView extends View {
 
   refresh () {
     for (const key of this.paneViewlist.keys()) {
-      this.fman.leftdir = 'C:/'
+      this.fman.leftdir = 'C:/data/'
       this.fman.rightdir = 'C:/'
-      //   await this.panelist[key].refresh()
-      this.paneViewlist[key].showFiles()
+      this.panelist[key].refresh()
+      // this.paneViewlist[key].showFiles()
     }
   }
 }

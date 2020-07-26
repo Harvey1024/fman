@@ -1,10 +1,10 @@
 
-class AbastractState{
-    constructor(){
-        
-    }
+class AbastractState {
+  constructor () {
+
+  }
 }
 
-class activeState{
-    
+class activeState {
+
 }

@@ -1,5 +1,7 @@
 const FilterState = require('./filterstate')
 const QuickCmdState = require('./quickcmdstate')
+const BaseState = require('./basestate')
+const Back = require('./back')
 module.exports = class KeyboardHander {
   constructor (mainpane) {
     this.mainpane = mainpane
@@ -17,6 +19,9 @@ module.exports = class KeyboardHander {
 
   buildchain () {
     this.state = new QuickCmdState(new FilterState())
+    // const baseState = new BaseState()
+    // this.state = new Back(baseState, this.mainpane)
+    // console.log(this.mainpane)
   }
 
   setState (state) {
