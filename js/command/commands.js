@@ -1,7 +1,11 @@
-const KeyboardHander = require('./js/command/keyboard')
-const back = require('./back')
+const KeyboardHander = require('./keyboard')
+const back = require('./state/back')
 
-const keyHander = new KeyboardHander()
-keyHander.regist('backspace', back)
 
+function keyHander(mainpane){
+    const keyboardHander = new KeyboardHander(mainpane)
+    keyboardHander.regist('backspace', back)
+    
+    return keyboardHander
+}
 module.exports = keyHander

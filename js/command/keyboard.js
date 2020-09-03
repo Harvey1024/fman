@@ -1,7 +1,7 @@
-const FilterState = require('./filterstate')
-const QuickCmdState = require('./quickcmdstate')
-const BaseState = require('./basestate')
-const Back = require('./back')
+const FilterState = require('./state/filterstate')
+const QuickCmdState = require('./state/quickcmdstate')
+const BaseState = require('./state/basestate')
+const Back = require('./state/back')
 module.exports = class KeyboardHander {
   constructor (mainpane) {
     this.mainpane = mainpane

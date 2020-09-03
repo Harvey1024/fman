@@ -13,7 +13,7 @@ class Back extends State {
       this.thisPane.dir = this.thisPane.pre
       this.thisPane.refresh()
     } else {
-      console.log('next')
+      console.log('back: next')
       this.next.run(content)
     }
   }

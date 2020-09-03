@@ -34,7 +34,7 @@ class MainView extends View {
 
   refresh () {
     for (const key of this.paneViewlist.keys()) {
-      this.fman.leftdir = 'C:/data/'
+      this.fman.leftdir = 'C:/'
       this.fman.rightdir = 'C:/'
       this.panelist[key].refresh()
       // this.paneViewlist[key].showFiles()
