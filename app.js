@@ -32,4 +32,3 @@ window.onclose = function () {
 }
 
 // k2 = new qcmd.quickcmd('new folder')
-// k2.newfolder('c:/users/harvey/onedrive/n2n')
