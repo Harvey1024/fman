@@ -1,106 +1,122 @@
-const Fs = require('../model/file')
-const File = Fs.File
-const Folder = Fs.Folder
+const Fs = require("../model/file");
+const File = Fs.File;
+const Folder = Fs.Folder;
+const FileList = require("../model/filelist");
 
 class PaneView {
-  showFiles () { }
-  addOnclick () { }
-  addOndblclick () { }
+  showFiles() {}
+  addOnclick() {}
+  addOndblclick() {}
 }
 
 class panView extends PaneView {
-  constructor (panename, pane) {
-    super()
-    this.dir = pane.dir
-    this.pane = pane
-    this.files = ''
-    this.panename = panename
-    this.paneId = document.getElementById(panename + 'InfList')
-    this.fileItems = document.getElementsByClassName('name' + panename)
-    this.dirId = document.getElementById(this.panename + 'dir')
-    this.key = 0
+  constructor(panename, pane) {
+    super();
+    this.dir = pane.dir;
+    this.pane = pane;
+    this.files = "";
+    this.panename = panename;
+    this.paneId = document.getElementById(panename + "InfList");
+    this.fileItems = document.getElementsByClassName("name" + panename);
+    this.dirId = document.getElementById(this.panename + "dir");
+    this.key = 0;
   }
-
-  async showFiles (panefiles) {
+  // panefiles: FileList
+  async showFiles(panefiles) {
     // await this.pane.refresh()
     // this.files = this.pane.files
     // add file list in html
-    this.dirId.innerText = this.dir
-    this.files = panefiles
+    this.dirId.innerText = this.dir;
+    this.files = panefiles;
 
-    var paneInnerText = ''
-    var nameClassStr = ''
-    var sizeStr = ''
-    var dateStr = ''
+    var paneInnerText = "";
+    var nameClassStr = "";
+    var sizeStr = "";
+    var dateStr = "";
     for (let i = 0; i < this.files.length; i++) {
-      const filename = this.files[i].name
-      const filesize = this.files[i].size
-      const filedate = this.files[i].atime
-      nameClassStr = "<td class='name" + this.panename + "'>" + filename + '</td>'
-      sizeStr = "<td class='size'>" + filesize + '</td>'
-      dateStr = "<td class='date'>" + filedate + '</td>'
+      const filename = this.files[i].name;
+      const filesize = this.files[i].size;
+      const filedate = this.files[i].atime;
+      nameClassStr =
+        "<td class='name" + this.panename + "'>" + filename + "</td>";
+      sizeStr = "<td class='size'>" + filesize + "</td>";
+      dateStr = "<td class='date'>" + filedate + "</td>";
 
       if (this.files[i].hide) {
-        paneInnerText = paneInnerText + "<tr class = 'filelist hide'>" + nameClassStr + sizeStr + dateStr + '</tr>'
-      } else { paneInnerText = paneInnerText + "<tr class = 'filelist'>" + nameClassStr + sizeStr + dateStr + '</tr>' }
+        paneInnerText =
+          paneInnerText +
+          "<tr class = 'filelist hide'>" +
+          nameClassStr +
+          sizeStr +
+          dateStr +
+          "</tr>";
+      } else {
+        paneInnerText =
+          paneInnerText +
+          "<tr class = 'filelist'>" +
+          nameClassStr +
+          sizeStr +
+          dateStr +
+          "</tr>";
+      }
     }
-    this.paneId.innerHTML = paneInnerText
+    this.paneId.innerHTML = paneInnerText;
     // add onclick and ondbclick
-    this.addOnclick()
-    this.addOndblclick()
+    this.addOnclick();
+    this.addOndblclick();
   }
 
-  addOnclick () {
-    this.refreshFolder()
+  addOnclick() {
+    this.refreshFolder();
     for (let i = 0; i < this.fileItems.length; i++) {
-      this.fileItems[i].parentNode.addEventListener('click', () => {
-        this.key = i
-        this.click(i)
-      })
+      this.fileItems[i].parentNode.addEventListener("click", () => {
+        this.key = i;
+        this.click(i);
+      });
     }
-    this.pane.fman.thisPane = this.pane
+    this.pane.fman.thisPane = this.pane;
   }
 
-  addOndblclick () {
-    this.refreshFolder()
+  addOndblclick() {
+    this.refreshFolder();
     for (let i = 0; i < this.fileItems.length; i++) {
-      this.fileItems[i].addEventListener('dblclick', () => {
-        this.key = i
-        this.openFileOrFolder()
-      })
+      this.fileItems[i].addEventListener("dblclick", () => {
+        this.key = i;
+        this.openFileOrFolder();
+      });
     }
   }
 
-  refreshFolder () {
-    this.fileItems = document.getElementsByClassName('name' + this.panename)
+  refreshFolder() {
+    this.fileItems = document.getElementsByClassName("name" + this.panename);
   }
 
-  openFileOrFolder () {
+  openFileOrFolder() {
     if (this.files[this.key] instanceof File) {
-      this.files[this.key].open()
+      this.files[this.key].open();
     } else if (this.files[this.key] instanceof Folder) {
-      this.pane.dir = this.files[this.key].dir + '/'
-      this.dir = this.pane.dir
-      console.log('open' + this.pane.dir)
-      this.pane.refresh()
+      this.pane.dir = this.files[this.key].dir + "/";
+      this.dir = this.pane.dir;
+      console.log("open" + this.pane.dir);
+      this.pane.refresh();
       // this.showFiles()
     }
   }
 
-  unselect (i) {
-    this.fileItems[i].parentNode.classList.remove('highlight')
+  unselect(i) {
+    this.fileItems[i].parentNode.classList.remove("highlight");
   }
 
-  click (i) {
-    this.clearSelected()
-    this.fileItems[i].parentNode.classList.add('highlight')
+  click(i) {
+    this.clearSelected();
+    this.fileItems[i].parentNode.classList.add("highlight");
   }
 
-  clearSelected () {
+  clearSelected() {
     for (let i = 0; i < this.fileItems.length; i++) {
-      this.unselect(i)
+      this.unselect(i);
     }
   }
 }
 
-module.exports = panView
+module.exports = panView;
