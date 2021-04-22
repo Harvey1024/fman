@@ -2,8 +2,8 @@ const Pane = require('./pane')
 
 class AbastractFman {
   constructor () {
-    this.leftpane = new Pane()
-    this.rightpane = new Pane()
+    this.leftpane = new Pane(this)
+    this.rightpane = new Pane(this)
     this.thisPane = this.leftpane
   }
 

@@ -18,10 +18,10 @@ module.exports = class KeyboardHander {
   }
 
   buildchain () {
-    this.state = new QuickCmdState(new FilterState())
-    // const baseState = new BaseState()
-    // this.state = new Back(baseState, this.mainpane)
-    // console.log(this.mainpane)
+    // this.state = new QuickCmdState(new FilterState())
+    const baseState = new BaseState()
+    this.state = new Back(baseState, this.mainpane)
+    console.log(this.mainpane)
   }
 
   setState (state) {

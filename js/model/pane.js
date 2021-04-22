@@ -2,11 +2,12 @@ var FileList = require('./filelist')
 const Dir = require('./dir')
 
 class AbastractPane {
-  constructor () {
+  constructor (fman) {
     this.filelist = new FileList()
     this.files = []
     this.dirObj = new Dir()
     this.observerList = []
+    this.fman = fman
   }
 
   refresh () {}
@@ -33,7 +34,7 @@ class Pane extends AbastractPane {
 
   notify () {
     for (const obser of this.observerList) {
-      obser.update(this.files)
+      obser.update(this.files, this.dir)
     }
   }
 

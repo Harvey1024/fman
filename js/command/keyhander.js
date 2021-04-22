@@ -1,4 +1,4 @@
-const KeyboardHander = require('./keyboard')
+const KeyboardHander = require('./keyboardhander')
 const back = require('./state/back')
 
 

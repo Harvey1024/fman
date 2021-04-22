@@ -17,6 +17,7 @@ class panView extends PaneView {
     this.panename = panename
     this.paneId = document.getElementById(panename + 'InfList')
     this.fileItems = document.getElementsByClassName('name' + panename)
+    this.dirId = document.getElementById(this.panename + 'dir')
     this.key = 0
   }
 
@@ -24,6 +25,7 @@ class panView extends PaneView {
     // await this.pane.refresh()
     // this.files = this.pane.files
     // add file list in html
+    this.dirId.innerText = this.dir
     this.files = panefiles
 
     var paneInnerText = ''
@@ -56,6 +58,7 @@ class panView extends PaneView {
         this.click(i)
       })
     }
+    this.pane.fman.thisPane = this.pane
   }
 
   addOndblclick () {

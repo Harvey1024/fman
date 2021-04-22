@@ -1,6 +1,6 @@
 // var fs = require("fs")
 const MainPane = require('./js/view/view')
-const KeyboardHander = require('./js/command/commands')
+const KeyboardHander = require('./js/command/keyhander')
 // const KeyboardHander = require('./js/command/keyboard')
 
 // initial filelist after html loaded

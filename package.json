@@ -5,7 +5,9 @@
   "scripts": {
     "start": "electron ."
   },
-  "dependencies": {},
+  "dependencies": {
+    "hidefile": "^3.0.0"
+  },
   "devDependencies": {
     "electron": "^9.0.0"
   }

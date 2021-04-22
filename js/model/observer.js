@@ -19,7 +19,8 @@ class PaneObserver extends Observer {
     this._state = state
   }
 
-  update (panefiles) {
+  update(panefiles, dir) {
+    this.panView.dir = dir
     this.panView.showFiles(panefiles)
   }
 }
